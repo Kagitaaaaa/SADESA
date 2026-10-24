@@ -25,7 +25,7 @@ Repository Utama: [https://github.com/Kagitaaaaa/SADESA](https://github.com/Kagi
 |---|---|---|---|
 | **Admin Desa** | `admin@sadesa.id` | `password` | Mengelola data master, verifikasi surat, respon aduan |
 | **Kepala Desa** | `kades@sadesa.id` | `password` | Validasi & tanda tangan persetujuan surat |
-| **Warga** | `budi@warga.id` | `password` | Layanan mandiri permohonan surat & riwayat aduan |
+| **Warga** | `priasolo@warga.id` | `password` | Layanan mandiri permohonan surat & riwayat aduan |
 
 ---
 
@@ -36,22 +36,7 @@ Kolaborasi menggunakan alur **Fork & Pull Request** agar repositori utama tetap 
 ### 1. Fork Repositori (Sekali di Awal)
 Buka [https://github.com/Kagitaaaaa/SADESA](https://github.com/Kagitaaaaa/SADESA) lalu klik tombol **Fork** di pojok kanan atas untuk menyalin repositori ke akun GitHub Anda masing-masing.
 
-### 2. Koding Fitur di Komputer Lokal
-```bash
-# Buat branch baru sesuai fitur yang dikerjakan
-git checkout -b feature/nama-fitur-kamu
-# Contoh: git checkout -b feature/pengaduan-warga
-
-# Koding di modul masing-masing... setelah selesai:
-git add .
-git commit -m "feat: menyelesaikan form pengaduan warga"
-
-# Push ke repositori Fork milik Anda sendiri
-git push -u origin feature/nama-fitur-kamu
-```
----
-
-### Setup Proyek (Laravel Herd)
+### 2. Setup Proyek (Laravel Herd)
 
 Karena menggunakan **Laravel Herd**, setup di komputer lokal sangat praktis:
 
@@ -72,10 +57,23 @@ php artisan key:generate
 php artisan migrate:fresh --seed
 php artisan storage:link
 ```
+### 3. Koding Fitur di Komputer Lokal
+```bash
+# Buat branch baru sesuai fitur yang dikerjakan
+git checkout -b feature/nama-fitur-kamu
+# Contoh: git checkout -b feature/pengaduan-warga
 
-### 3. Buat Pull Request (PR) ke Repositori Utama
+# Koding di modul masing-masing... setelah selesai:
+git add .
+git commit -m "feat: menyelesaikan form pengaduan warga"
+
+# Push ke repositori Fork milik Anda sendiri
+git push -u origin feature/nama-fitur-kamu
+```
+
+### 4. Buat Pull Request (PR) ke Repositori Utama
 1. Buka halaman GitHub hasil fork Anda: `https://github.com/<username-kamu>/SADESA`
 2. Klik tombol hijau **"Contribute"** → pilih **"Open pull request"**.
 3. Pastikan tujuan merge mengarah ke repositori utama (`Kagitaaaaa/SADESA`).
 4. Tulis deskripsi singkat fitur yang selesai dibuat, lalu klik **"Create pull request"**.
-5. Pemilik repositori utama akan mereview dan menggabungkan (*merge*) kodingan Anda.
+5. Ntar aku bakal gabungin (*merge*) kodingan Anda.

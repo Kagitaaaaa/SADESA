@@ -19,65 +19,70 @@ Repository Utama: [https://github.com/Kagitaaaaa/SADESA](https://github.com/Kagi
 
 ---
 
-## 🔑 Akun Pengujian Bawaan
+## 🚀 Panduan Memulai (Simpel via GitHub Desktop & Laravel Herd)
 
-| Role | Email | Password | Hak Akses |
-|---|---|---|---|
-| **Admin Desa** | `admin@sadesa.id` | `password` | Mengelola data master, verifikasi surat, respon aduan |
-| **Kepala Desa** | `kades@sadesa.id` | `password` | Validasi & tanda tangan persetujuan surat |
-| **Warga** | `budi@warga.id` | `password` | Layanan mandiri permohonan surat & riwayat aduan |
+Ikuti urutan langkah mudah ini:
+
+### 1. Fork Repositori di Web GitHub
+1. Buka repositori utama: [https://github.com/Kagitaaaaa/SADESA](https://github.com/Kagitaaaaa/SADESA)
+2. Klik tombol **Fork** (di pojok kanan atas) untuk menyalin repositori ke akun GitHub Anda.
 
 ---
 
-## 🌿 Alur Kerja Fork & Pull Request (Untuk Rekan Tim)
+### 2. Clone Lewat Aplikasi GitHub Desktop
+1. Buka aplikasi **GitHub Desktop**.
+2. Klik menu **File** → **Clone repository...**
+3. Di tab **GitHub.com**, pilih repositori fork Anda (`<username-kamu>/SADESA`).
+4. Pada **Local path**, arahkan ke folder Herd Anda: `D:\Herd\SADESA`.
+5. Klik tombol **Clone**.
 
-Kolaborasi menggunakan alur **Fork & Pull Request** agar repositori utama tetap aman dan bebas dari konflik kode (*merge conflict*):
+---
 
-### 1. Fork Repositori (Sekali di Awal)
-Buka [https://github.com/Kagitaaaaa/SADESA](https://github.com/Kagitaaaaa/SADESA) lalu klik tombol **Fork** di pojok kanan atas untuk menyalin repositori ke akun GitHub Anda masing-masing.
-
-## 2. Setup Proyek (Laravel Herd)
-
-Karena menggunakan **Laravel Herd**, setup di komputer lokal sangat praktis:
+### 3. Setup Awal Laravel (Cuma 1 Kali di Terminal)
+Buka terminal / PowerShell di folder proyek (`D:\Herd\SADESA`), lalu jalankan:
 
 ```bash
-# 1. Masuk ke folder Herd dan clone dari repositori FORK Anda sendiri
-cd D:\Herd
-git clone https://github.com/<username-kamu>/SADESA.git
-cd SADESA
-
-# 2. Install dependensi backend PHP (Composer)
+# 1. Install library backend PHP
 composer install
 
-# 3. Siapkan file konfigurasi environment dan generate App Key
+# 2. Siapkan file .env dan generate App Key
 copy .env.example .env
 php artisan key:generate
 
-# 4. Migrasi database dan isi data awal otomatis (Desa Kejawar, Akun Uji, Jenis Surat)
+# 3. Buat database dan isi data awal otomatis (Desa, Akun Uji, Jenis Surat)
 php artisan migrate:fresh --seed
 php artisan storage:link
 ```
 
+> **Catatan:** Anda **TIDAK PERLU install Node.js / NPM** karena tampilan web sudah di-compile di folder `public/build`.  
+> Buka browser dan ketik: 👉 **`http://sadesa.test`** (website langsung aktif!).
 
-### 3. Koding Fitur di Komputer Lokal
-```bash
-# 1. Buat branch baru untuk tugas Anda (jangan koding di main)
-git checkout -b feature/nama-fitur-kamu
-# Contoh: git checkout -b feature/pengaduan-warga
+---
 
-# 2. Koding fitur sesuai pembagian tugas di folder masing-masing...
+### 4. Akun Bawaan untuk Uji Coba Login
+Gunakan akun ini untuk mengetes fitur di browser:
 
-# 3. Simpan perubahan ke git
-git add .
-git commit -m "feat: menyelesaikan form pengaduan warga"
+* **Admin Desa:** `admin@sadesa.id` | Password: `password` (Akses kelola warga, surat & berita)
+* **Kepala Desa:** `kades@sadesa.id` | Password: `password` (Akses persetujuan surat)
+* **Warga:** `budi@warga.id` | Password: `password` (Akses layanan mandiri surat warga)
 
-# 4. Push branch ke repositori Fork milik Anda sendiri
-git push -u origin feature/nama-fitur-kamu
-```
+---
 
-### 4. Buat Pull Request (PR) ke Repositori Utama
-1. Buka halaman GitHub hasil fork Anda: `https://github.com/<username-kamu>/SADESA`
-2. Klik tombol hijau **"Contribute"** → pilih **"Open pull request"**.
-3. Pastikan tujuan merge mengarah ke repositori utama (`Kagitaaaaa/SADESA`).
-4. Tulis deskripsi singkat fitur yang selesai dibuat, lalu klik **"Create pull request"**.
-5. Pemilik repositori utama akan mereview dan menggabungkan (*merge*) kodingan Anda.
+### 5. Cara Koding & Kirim Tugas (100% Lewat GitHub Desktop)
+
+Setiap kali mau mengerjakan tugas modul Anda:
+
+1. **Buat Branch Baru di GitHub Desktop:**
+   - Di bagian atas, klik menu **Current Branch** → klik tombol **New branch**.
+   - Beri nama sesuai fitur tugasmu (misal: `fitur-pengaduan`).
+2. **Koding di Text Editor:**
+   - Buka VS Code / editor pilihan Anda, buat kodingan sesuai modul Anda.
+3. **Commit & Push di GitHub Desktop:**
+   - Buka kembali GitHub Desktop (perubahan file akan otomatis terdeteksi di sisi kiri).
+   - Di pojok kiri bawah, tulis pesan di kotak **Summary** (misal: `selesai buat form pengaduan`).
+   - Klik tombol biru **Commit to fitur-...**
+   - Di bagian atas, klik tombol **Push origin**.
+4. **Kirim Tugas (Create Pull Request):**
+   - Setelah selesai push, GitHub Desktop akan langsung memunculkan tombol **"Preview Pull Request"** atau **"Create Pull Request"**.
+   - Klik tombol tersebut, maka browser akan terbuka otomatis.
+   - Klik tombol hijau **Create pull request** di browser. Selesai!

@@ -1,58 +1,200 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🏛️ SADESA (Sistem Administrasi dan Informasi Desa)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+> **Tugas Akhir Praktikum Pemrograman 2**  
+> **Program Studi Pendidikan Teknik Informatika dan Komputer (PTIK)**
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📌 1. Latar Belakang & Deskripsi Proyek
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+**SADESA (Sistem Administrasi dan Informasi Desa)** adalah aplikasi berbasis web yang dirancang untuk mengintegrasikan tata kelola kependudukan, transparansi publikasi desa, dan pelayanan surat pengantar warga secara digital.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Aplikasi ini memfasilitasi kebutuhan dua belah pihak:
+1. **Pemerintah Desa**: Mengelola data induk kependudukan (Kartu Keluarga & Warga), mencetak surat keterangan resmi ber-kop otomatis, menindaklanjuti pengaduan warga, serta mempublikasikan berita, agenda, dan dokumentasi kegiatan desa.
+2. **Masyarakat / Warga**: Mengajukan surat pengantar secara mandiri dari rumah tanpa antre, melacak status pengajuan, mengirimkan aspirasi/pengaduan masalah desa, serta mengakses informasi seputar desa.
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 🌟 2. Fitur Utama Sistem (Hasil Revisi & Evaluasi)
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+SADESA telah disempurnakan dengan fitur-fitur berikut:
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+1. **Master Kependudukan**: Pengelolaan data Kartu Keluarga (`kartu_keluargas`) dan data penduduk desa (`wargas`) dengan pencarian cepat via NIK dan No KK.
+2. **Pelayanan E-Surat & Kop Otomatis**:
+   - Berbagai format surat: Surat Keterangan Usaha (SKU), Keterangan Tidak Mampu (SKTM), Domisili, dan Pengantar SKCK.
+   - **Kop Surat Otomatis**: Kop surat (Lambang Kabupaten, Nama Pemkab, Kecamatan, Desa, Alamat Kantor, dan Garis Ganda Kedinasan) terisi otomatis dari database desa.
+   - **Biodata Otomatis**: Data pemohon otomatis ditarik dari data warga.
+   - **QR Code Verifikasi**: Setiap surat dilengkapi token unik untuk validasi keaslian dokumen via scan smartphone di halaman publik.
+3. **Portal Pengaduan & Aspirasi Warga**: Formulir pengaduan publik dilengkapi unggahan foto bukti, kode tiket pelacakan (misal `ADU-202610-001`), opsi anonim/rahasia, dan panel tanggapan aparatur desa.
+4. **Halaman About Desa & Profil Aparatur**: Informasi sejarah desa, visi-misi, peta koordinat wilayah, serta struktur organisasi pamong desa (Kepala Desa, Sekdes, Kasi, Kaur, Kadus) beserta foto dan tupoksi.
+5. **Publikasi, Dokumentasi & Agenda**: Berita desa dinamis, album galeri kegiatan desa (multi-foto), dan kalender agenda kegiatan desa mendatang.
+6. **Modul Panduan & Tutorial**: Halaman panduan langkah demi langkah cara mengajukan surat online dan alur pengaduan untuk memudahkan warga.
 
-## Agentic Development
+---
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## 👥 3. Pembagian Tugas Tim 6 Orang (Work Breakdown Structure)
+
+Untuk menghindari bentrok pengodingan di GitHub, setiap anggota memegang tanggung jawab modul dan folder yang terisolasi:
+
+| No | Anggota | Fokus Modul | File / Folder yang Dikerjakan |
+|---|---|---|---|
+| 1 | **Anggota 1** *(Lead)* | **Auth & Master Kependudukan** | • `app/Http/Controllers/Admin/KependudukanController.php`<br>• `resources/views/admin/kependudukan/*`<br>• Hak akses (Role: Admin vs Warga) |
+| 2 | **Anggota 2** | **Layanan E-Surat & Kop Otomatis** | • `app/Http/Controllers/Warga/PermohonanSuratController.php`<br>• `app/Http/Controllers/Admin/LayananSuratController.php`<br>• `resources/views/warga/surat/*`<br>• `resources/views/admin/surat/*`<br>• `resources/views/surat/cetak/*` |
+| 3 | **Anggota 3** | **Aspirasi & Pengaduan Warga** | • `app/Http/Controllers/Public/PengaduanPublikController.php`<br>• `app/Http/Controllers/Admin/PengaduanController.php`<br>• `resources/views/public/pengaduan/*`<br>• `resources/views/admin/pengaduan/*` |
+| 4 | **Anggota 4** | **Informasi, Agenda & Dokumentasi** | • `app/Http/Controllers/Public/PortalBeritaController.php`<br>• `app/Http/Controllers/Admin/InformasiController.php`<br>• `resources/views/public/informasi/*`<br>• `resources/views/admin/informasi/*` |
+| 5 | **Anggota 5** | **About Desa & Profil Aparatur** | • `app/Http/Controllers/Public/AboutDesaController.php`<br>• `app/Http/Controllers/Admin/ProfilDesaController.php`<br>• `resources/views/public/about/*`<br>• `resources/views/admin/profil/*` |
+| 6 | **Anggota 6** | **Panduan, Landing Page & UI-UX** | • `app/Http/Controllers/Public/HomeController.php`<br>• `app/Http/Controllers/Public/VerifikasiSuratController.php`<br>• `resources/views/welcome.blade.php`<br>• `resources/views/public/panduan/*` |
+
+---
+
+## 🚀 4. Panduan Setup Proyek Lokal (Untuk Rekan Tim yang Baru Clone)
+
+Ikuti langkah-langkah di bawah ini untuk menjalankan SADESA di komputer lokal masing-masing:
+
+### Prasyarat
+- PHP 8.2 atau 8.4 (Laravel Herd / Laragon / XAMPP)
+- Composer
+- Node.js & NPM
+- Git
+
+### Langkah Instalasi
 
 ```bash
-composer require laravel/boost --dev
+# 1. Clone repository ke komputer lokal
+git clone https://github.com/<username-lead>/sadesa-sistem-administrasi-dan-informasi-desa-.git
+cd sadesa-sistem-administrasi-dan-informasi-desa-
 
-php artisan boost:install
+# 2. Pindah ke branch development
+git checkout dev
+
+# 3. Install dependency PHP (Composer)
+composer install
+
+# 4. Install dependency Frontend (Node.js)
+npm install
+
+# 5. Duplikat file environment .env
+# Windows (PowerShell):
+copy .env.example .env
+# Mac / Linux:
+# cp .env.example .env
+
+# 6. Generate Application Key Laravel
+php artisan key:generate
+
+# 7. Jalankan migrasi basis data dan seeder data awal
+php artisan migrate:fresh --seed
+
+# 8. Jalankan storage link (untuk membaca file upload/gambar)
+php artisan storage:link
+
+# 9. Jalankan development server
+# Jalankan frontend bundler (terminal 1):
+npm run dev
+
+# Jalankan server Laravel (terminal 2):
+php artisan serve
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Aplikasi sekarang dapat diakses di browser melalui URL: `http://localhost:8000`.
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 🔐 5. Akun Pengujian Bawaan (Hasil Seeder)
 
-## Code of Conduct
+Database seeder telah menyiapkan akun siap uji untuk mempermudah pengerjaan:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+| Peran (Role) | Email | Password | Keterangan Akses |
+|---|---|---|---|
+| **Administrator** | `admin@sadesa.id` | `password` | Akses penuh panel admin perangkat desa |
+| **Kepala Desa** | `kades@sadesa.id` | `password` | Menyetujui surat dan menandatangani surat |
+| **Warga** | `budi@warga.id` | `password` | Terhubung ke NIK Budi Santoso untuk tes pengajuan surat mandiri |
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 🌿 6. Panduan Kolaborasi Git & GitHub (Anti Merge Conflict)
 
-## License
+Agar pengerjaan 6 orang berjalan lancar tanpa konflik merge file:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Aturan Branch
+- **`main`**: Kode rilis final yang sudah diuji (hanya dimerge saat siap presentasi).
+- **`dev`**: Branch pengembangan bersama. Semua anggota mengambil dan menggabungkan kodingan di sini.
+- **`feature/nama-fitur`**: Branch kerja pribadi masing-masing anggota.
+
+### Alur Kerja Harian Anggota Tim
+
+```bash
+# 1. Pastikan branch dev lokal sudah paling baru
+git checkout dev
+git pull origin dev
+
+# 2. Buat branch fitur baru untuk tugasmu
+git checkout -b feature/nama-fitur-kamu
+# Contoh: git checkout -b feature/layanan-surat
+
+# 3. Koding fitur sesuai tugas di modul masing-masing...
+
+# 4. Cek perubahan file yang kamu buat
+git status
+
+# 5. Commit pekerjaan
+git add .
+git commit -m "feat(surat): membuat form pengajuan surat dan validasi input"
+
+# 6. SINKRONISASI SEBELUM PUSH (PENTING! Mencegah Merge Conflict)
+git checkout dev
+git pull origin dev
+git checkout feature/nama-fitur-kamu
+git merge dev
+
+# 7. Push branch fitur ke GitHub
+git push -u origin feature/nama-fitur-kamu
+```
+
+### Membuat Pull Request (PR) di GitHub
+1. Buka repository proyek di GitHub.
+2. Klik tombol **"Compare & pull request"** yang baru saja muncul.
+3. Pastikan **base branch: `dev`** dan **compare branch: `feature/nama-fitur-kamu`**.
+4. Tulis keterangan singkat mengenai fitur yang telah selesai.
+5. Klik **"Create pull request"**.
+6. Ketua tim / anggota lain mereview dan klik **"Merge pull request"**.
+
+---
+
+## 📁 7. Struktur Folder Penting
+
+```
+sadesa/
+├── app/
+│   ├── Http/Controllers/
+│   │   ├── Admin/         <- Controller panel staf & kades
+│   │   ├── Warga/         <- Controller layanan mandiri warga
+│   │   └── Public/        <- Controller halaman umum
+│   └── Models/            <- 14 Model Eloquent basis data
+├── database/
+│   ├── migrations/        <- Skema database SADESA
+│   └── seeders/           <- Starter data desa, jenis surat & akun uji
+├── resources/
+│   └── views/
+│       ├── components/    <- Komponen (kop-surat.blade.php, navbar, footer)
+│       ├── public/        <- View portal umum (about, berita, pengaduan, panduan)
+│       ├── warga/         <- View portal warga
+│       ├── admin/         <- View panel admin
+│       └── surat/cetak/   <- Template cetak A4 surat ber-kop resmi
+└── routes/
+    ├── web.php            <- Loader rute utama
+    ├── public.php         <- Rute publik & pengunjung
+    ├── warga.php          <- Rute portal warga terproteksi auth
+    └── admin.php          <- Rute panel admin terproteksi auth
+```
+
+---
+
+## ⚖️ 8. Tata Tertib Pengodean Bersama
+1. **Dilarang langsung commit ke branch `main` atau `dev`**.
+2. **Dilarang mengubah struktur database yang sudah ada di migration tanpa koordinasi**. Jika perlu kolom tambahan, buat migration baru (`php artisan make:migration add_kolom_to_tabel`).
+3. **Jangan meng-upload file `.env`**. File konfigurasi pribadi tetap lokal.
+4. **Jalankan formatter Pint sebelum commit**: Jalankan `vendor/bin/pint --dirty` agar format kode PHP rapi dan konsisten.
+
+---
+*Dikembangkan dengan penuh dedikasi oleh Tim Pengembang SADESA - PTIK.*

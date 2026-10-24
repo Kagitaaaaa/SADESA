@@ -19,33 +19,6 @@ Repository Utama: [https://github.com/Kagitaaaaa/SADESA](https://github.com/Kagi
 
 ---
 
-## 🚀 Setup Proyek (Laravel Herd)
-
-Karena menggunakan **Laravel Herd**, setup di komputer lokal sangat praktis:
-
-```bash
-# 1. Masuk ke direktori Herd Anda lalu clone dari repo Fork Anda
-cd D:\Herd
-git clone https://github.com/<username-kamu>/SADESA.git
-cd SADESA
-
-# 2. Install dependensi PHP (Composer)
-composer install
-
-# 3. Siapkan file environment .env dan generate App Key
-copy .env.example .env
-php artisan key:generate
-
-# 4. Migrasi database dan isi data awal otomatis (Desa, Akun Uji, Jenis Surat)
-php artisan migrate:fresh --seed
-php artisan storage:link
-```
-
-> **Catatan:** Aset CSS & JavaScript tampilan web sudah di-compile di folder `public/build`, jadi Anda **tidak wajib menginstall Node.js / NPM**. Aplikasi langsung aktif dan dapat diakses di browser melalui:  
-👉 **`http://sadesa.test`** (atau nama folder di Laravel Herd Anda)
-
----
-
 ## 🔑 Akun Pengujian Bawaan
 
 | Role | Email | Password | Hak Akses |
@@ -75,6 +48,29 @@ git commit -m "feat: menyelesaikan form pengaduan warga"
 
 # Push ke repositori Fork milik Anda sendiri
 git push -u origin feature/nama-fitur-kamu
+```
+---
+
+### Setup Proyek (Laravel Herd)
+
+Karena menggunakan **Laravel Herd**, setup di komputer lokal sangat praktis:
+
+```bash
+# 1. Masuk ke direktori Herd Anda lalu clone dari repo Fork Anda
+cd D:\Herd
+git clone https://github.com/<username-kamu>/SADESA.git
+cd SADESA
+
+# 2. Install dependensi PHP (Composer)
+composer install
+
+# 3. Siapkan file environment .env dan generate App Key
+copy .env.example .env
+php artisan key:generate
+
+# 4. Migrasi database dan isi data awal otomatis (Desa, Akun Uji, Jenis Surat)
+php artisan migrate:fresh --seed
+php artisan storage:link
 ```
 
 ### 3. Buat Pull Request (PR) ke Repositori Utama

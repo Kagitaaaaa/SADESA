@@ -21,12 +21,11 @@ Repository: [https://github.com/Kagitaaaaa/SADESA-](https://github.com/Kagitaaaa
 
 ## 🚀 Setup Proyek (Laravel Herd)
 
-Karena menggunakan **Laravel Herd**, setup di komputer lokal sangat praktis:
 
 ```bash
 # 1. Masuk ke direktori Herd Anda lalu clone repository
-cd D:\Herd
-git clone https://github.com/Kagitaaaaa/SADESA-.git
+cd D:\Herd (Sesuaikan Path Herd mu)
+git clone https://github.com/Kagitaaaaa/SADESA.git
 cd SADESA
 
 # 2. Install package PHP & Frontend

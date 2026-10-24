@@ -2,7 +2,7 @@
 
 Aplikasi web administrasi desa untuk pelayanan surat pengantar warga, publikasi informasi, pengelolaan kependudukan, dan pengaduan masyarakat.
 
-Repository: [https://github.com/Kagitaaaaa/SADESA-](https://github.com/Kagitaaaaa/SADESA-)
+Repository: [https://github.com/Kagitaaaaa/SADESA-](https://github.com/Kagitaaaaa/SADESA)
 
 ---
 
@@ -27,7 +27,7 @@ Karena menggunakan **Laravel Herd**, setup di komputer lokal sangat praktis:
 # 1. Masuk ke direktori Herd Anda lalu clone repository
 cd D:\Herd
 git clone https://github.com/Kagitaaaaa/SADESA-.git
-cd SADESA-
+cd SADESA
 
 # 2. Install package PHP & Frontend
 composer install
@@ -56,7 +56,7 @@ Aplikasi langsung aktif dan dapat diakses di browser melalui:
 |---|---|---|---|
 | **Admin Desa** | `admin@sadesa.id` | `password` | Mengelola data master, verifikasi surat, respon aduan |
 | **Kepala Desa** | `kades@sadesa.id` | `password` | Validasi & tanda tangan persetujuan surat |
-| **Warga** | `budi@warga.id` | `password` | Layanan mandiri permohonan surat & riwayat aduan |
+| **Warga** | `priapabelan@warga.id` | `password` | Layanan mandiri permohonan surat & riwayat aduan |
 
 ---
 

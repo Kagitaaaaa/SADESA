@@ -2,7 +2,7 @@
 
 Aplikasi web administrasi desa untuk pelayanan surat pengantar warga, publikasi informasi, pengelolaan kependudukan, dan pengaduan masyarakat.
 
-Repository: [https://github.com/Kagitaaaaa/SADESA](https://github.com/Kagitaaaaa/SADESA)
+Repository Utama: [https://github.com/Kagitaaaaa/SADESA-](https://github.com/Kagitaaaaa/SADESA-)
 
 ---
 
@@ -21,31 +21,28 @@ Repository: [https://github.com/Kagitaaaaa/SADESA](https://github.com/Kagitaaaaa
 
 ## 🚀 Setup Proyek (Laravel Herd)
 
+Karena menggunakan **Laravel Herd**, setup di komputer lokal sangat praktis:
 
 ```bash
-# 1. Masuk ke direktori Herd Anda lalu clone repository
-cd D:\Herd (Sesuaikan Path Herd mu)
-git clone https://github.com/Kagitaaaaa/SADESA.git
-cd SADESA
+# 1. Masuk ke direktori Herd Anda lalu clone dari repo Fork Anda
+cd D:\Herd
+git clone https://github.com/<username-kamu>/SADESA-.git
+cd SADESA-
 
-# 2. Install package PHP & Frontend
+# 2. Install dependensi PHP (Composer)
 composer install
-npm install
 
-# 3. Buat file .env dan generate App Key
+# 3. Siapkan file environment .env dan generate App Key
 copy .env.example .env
 php artisan key:generate
 
 # 4. Migrasi database dan isi data awal otomatis (Desa, Akun Uji, Jenis Surat)
 php artisan migrate:fresh --seed
 php artisan storage:link
-
-# 5. Jalankan asset Vite
-npm run dev
 ```
 
-Aplikasi langsung aktif dan dapat diakses di browser melalui:  
-👉 **`http://sadesa.test`** (atau URL site di Laravel Herd Anda)
+> **Catatan:** Aset CSS & JavaScript tampilan web sudah di-compile di folder `public/build`, jadi Anda **tidak wajib menginstall Node.js / NPM**. Aplikasi langsung aktif dan dapat diakses di browser melalui:  
+👉 **`http://sadesa.test`** (atau nama folder di Laravel Herd Anda)
 
 ---
 
@@ -55,35 +52,34 @@ Aplikasi langsung aktif dan dapat diakses di browser melalui:
 |---|---|---|---|
 | **Admin Desa** | `admin@sadesa.id` | `password` | Mengelola data master, verifikasi surat, respon aduan |
 | **Kepala Desa** | `kades@sadesa.id` | `password` | Validasi & tanda tangan persetujuan surat |
-| **Warga** | `priapabelan@warga.id` | `password` | Layanan mandiri permohonan surat & riwayat aduan |
+| **Warga** | `budi@warga.id` | `password` | Layanan mandiri permohonan surat & riwayat aduan |
 
 ---
 
-## 🌿 Alur Kolaborasi Git & GitHub
+## 🌿 Alur Kerja Fork & Pull Request (Untuk Rekan Tim)
 
-Agar pengerjaan 6 orang tidak saling menimpa kode (bebas merge conflict):
+Kolaborasi menggunakan alur **Fork & Pull Request** agar repositori utama tetap aman dan bebas dari konflik kode (*merge conflict*):
 
+### 1. Fork Repositori (Sekali di Awal)
+Buka [https://github.com/Kagitaaaaa/SADESA-](https://github.com/Kagitaaaaa/SADESA-) lalu klik tombol **Fork** di pojok kanan atas untuk menyalin repositori ke akun GitHub Anda masing-masing.
+
+### 2. Koding Fitur di Komputer Lokal
 ```bash
-# 1. Selalu mulai dari branch dev terbaru
-git checkout dev
-git pull origin dev
-
-# 2. Buat branch fitur sesuai tugas masing-masing
+# Buat branch baru sesuai fitur yang dikerjakan
 git checkout -b feature/nama-fitur-kamu
-# Contoh: git checkout -b feature/layanan-surat
+# Contoh: git checkout -b feature/pengaduan-warga
 
-# 3. Koding di modul masing-masing, lalu simpan commit
+# Koding di modul masing-masing... setelah selesai:
 git add .
-git commit -m "feat: deskripsi perubahan fitur"
+git commit -m "feat: menyelesaikan form pengaduan warga"
 
-# 4. Sinkronkan dengan dev sebelum push (wajib)
-git checkout dev
-git pull origin dev
-git checkout feature/nama-fitur-kamu
-git merge dev
-
-# 5. Push branch fitur ke GitHub
+# Push ke repositori Fork milik Anda sendiri
 git push -u origin feature/nama-fitur-kamu
-
-# 6. Buka GitHub -> Buat Pull Request (PR) ke branch 'dev'
 ```
+
+### 3. Buat Pull Request (PR) ke Repositori Utama
+1. Buka halaman GitHub hasil fork Anda: `https://github.com/<username-kamu>/SADESA-`
+2. Klik tombol hijau **"Contribute"** → pilih **"Open pull request"**.
+3. Pastikan tujuan merge mengarah ke repositori utama (`Kagitaaaaa/SADESA-`).
+4. Tulis deskripsi singkat fitur yang selesai dibuat, lalu klik **"Create pull request"**.
+5. Pemilik repositori utama akan mereview dan menggabungkan (*merge*) kodingan Anda.

@@ -53,10 +53,6 @@ php artisan key:generate
 php artisan migrate:fresh --seed
 php artisan storage:link
 ```
-
-> **Catatan:** Anda **TIDAK PERLU install Node.js / NPM** karena tampilan web sudah di-compile di folder `public/build`.  
-> Buka browser dan ketik: 👉 **`http://sadesa.test`** (website langsung aktif!).
-
 ---
 
 ### 4. Akun Bawaan untuk Uji Coba Login
@@ -68,7 +64,7 @@ Gunakan akun ini untuk mengetes fitur di browser:
 
 ---
 
-### 5. Cara Koding & Kirim Tugas (100% Lewat GitHub Desktop)
+### 5. Cara Commit pake GitHub Desktop
 
 Setiap kali mau mengerjakan tugas modul Anda:
 

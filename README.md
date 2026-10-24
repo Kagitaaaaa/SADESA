@@ -2,7 +2,7 @@
 
 Aplikasi web administrasi desa untuk pelayanan surat pengantar warga, publikasi informasi, pengelolaan kependudukan, dan pengaduan masyarakat.
 
-Repository: [https://github.com/Kagitaaaaa/SADESA-](https://github.com/Kagitaaaaa/SADESA)
+Repository: [https://github.com/Kagitaaaaa/SADESA](https://github.com/Kagitaaaaa/SADESA)
 
 ---
 

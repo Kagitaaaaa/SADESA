@@ -19,34 +19,46 @@ Repository Utama: [https://github.com/Kagitaaaaa/SADESA](https://github.com/Kagi
 
 ---
 
-## 🚀 Setup Proyek (Laravel Herd)
+## 🚀 Panduan Memulai (Step-by-Step dari Fork sampai Jalan)
 
-Karena menggunakan **Laravel Herd**, setup di komputer lokal sangat praktis:
+Ikuti urutan langkah berikut secara runtut:
+
+### Langkah 1: Fork Repositori di GitHub (Sekali di Awal)
+1. Buka repositori utama: [https://github.com/Kagitaaaaa/SADESA](https://github.com/Kagitaaaaa/SADESA)
+2. Klik tombol **Fork** di pojok kanan atas untuk menyalin repositori ke akun GitHub Anda masing-masing.
+
+---
+
+### Langkah 2: Clone ke Komputer Lokal & Setup (Laravel Herd)
+Buka terminal Anda, masuk ke direktori Herd, lalu jalankan perintah berikut:
 
 ```bash
-# 1. Masuk ke direktori Herd Anda lalu clone dari repo Fork Anda
+# 1. Masuk ke folder Herd dan clone dari repositori FORK Anda sendiri
 cd D:\Herd
 git clone https://github.com/<username-kamu>/SADESA.git
 cd SADESA
 
-# 2. Install dependensi PHP (Composer)
+# 2. Install dependensi backend PHP (Composer)
 composer install
 
-# 3. Siapkan file environment .env dan generate App Key
+# 3. Siapkan file konfigurasi environment dan generate App Key
 copy .env.example .env
 php artisan key:generate
 
-# 4. Migrasi database dan isi data awal otomatis (Desa, Akun Uji, Jenis Surat)
+# 4. Migrasi database dan isi data awal otomatis (Desa Kejawar, Akun Uji, Jenis Surat)
 php artisan migrate:fresh --seed
 php artisan storage:link
 ```
 
-> **Catatan:** Aset CSS & JavaScript tampilan web sudah di-compile di folder `public/build`, jadi Anda **tidak wajib menginstall Node.js / NPM**. Aplikasi langsung aktif dan dapat diakses di browser melalui:  
-👉 **`http://sadesa.test`** (atau nama folder di Laravel Herd Anda)
+> **Catatan Penting:** Anda **TIDAK PERLU menginstall Node.js ataupun NPM** karena seluruh file aset CSS dan JS tampilan web sudah di-compile di folder `public/build`.  
+> Website langsung aktif dan dapat dibuka di browser:  
+> 👉 **`http://sadesa.test`** (atau nama folder di Laravel Herd Anda)
 
 ---
 
-## 🔑 Akun Pengujian Bawaan
+### Langkah 3: Akun Pengujian Bawaan untuk Login
+
+Setelah database di-seed, gunakan akun berikut untuk masuk ke sistem:
 
 | Role | Email | Password | Hak Akses |
 |---|---|---|---|
@@ -56,30 +68,28 @@ php artisan storage:link
 
 ---
 
-## 🌿 Alur Kerja Fork & Pull Request (Untuk Rekan Tim)
+### Langkah 4: Alur Koding Fitur & Mengirimkan Pull Request (PR)
 
-Kolaborasi menggunakan alur **Fork & Pull Request** agar repositori utama tetap aman dan bebas dari konflik kode (*merge conflict*):
+Setelah website berjalan di laptop Anda, ikuti alur berikut saat mengerjakan modul Anda:
 
-### 1. Fork Repositori (Sekali di Awal)
-Buka [https://github.com/Kagitaaaaa/SADESA](https://github.com/Kagitaaaaa/SADESA) lalu klik tombol **Fork** di pojok kanan atas untuk menyalin repositori ke akun GitHub Anda masing-masing.
-
-### 2. Koding Fitur di Komputer Lokal
 ```bash
-# Buat branch baru sesuai fitur yang dikerjakan
+# 1. Buat branch baru untuk tugas Anda (jangan koding di main)
 git checkout -b feature/nama-fitur-kamu
 # Contoh: git checkout -b feature/pengaduan-warga
 
-# Koding di modul masing-masing... setelah selesai:
+# 2. Koding fitur sesuai pembagian tugas di folder masing-masing...
+
+# 3. Simpan perubahan ke git
 git add .
 git commit -m "feat: menyelesaikan form pengaduan warga"
 
-# Push ke repositori Fork milik Anda sendiri
+# 4. Push branch ke repositori Fork milik Anda sendiri
 git push -u origin feature/nama-fitur-kamu
 ```
 
-### 3. Buat Pull Request (PR) ke Repositori Utama
-1. Buka halaman GitHub hasil fork Anda: `https://github.com/<username-kamu>/SADESA`
+**Kirim ke Repositori Utama:**
+1. Buka halaman GitHub fork Anda: `https://github.com/<username-kamu>/SADESA`
 2. Klik tombol hijau **"Contribute"** → pilih **"Open pull request"**.
 3. Pastikan tujuan merge mengarah ke repositori utama (`Kagitaaaaa/SADESA`).
-4. Tulis deskripsi singkat fitur yang selesai dibuat, lalu klik **"Create pull request"**.
-5. Pemilik repositori utama akan mereview dan menggabungkan (*merge*) kodingan Anda.
+4. Beri judul dan deskripsi singkat tentang fitur yang dibuat, lalu klik **"Create pull request"**.
+5. Pemilik repositori utama akan mereview dan menggabungkan (*merge*) kodingan Anda ke proyek utama.

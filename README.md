@@ -2,7 +2,7 @@
 
 Aplikasi web administrasi desa untuk pelayanan surat pengantar warga, publikasi informasi, pengelolaan kependudukan, dan pengaduan masyarakat.
 
-Repository Utama: [https://github.com/Kagitaaaaa/SADESA-](https://github.com/Kagitaaaaa/SADESA-)
+Repository Utama: [https://github.com/Kagitaaaaa/SADESA](https://github.com/Kagitaaaaa/SADESA)
 
 ---
 
@@ -26,8 +26,8 @@ Karena menggunakan **Laravel Herd**, setup di komputer lokal sangat praktis:
 ```bash
 # 1. Masuk ke direktori Herd Anda lalu clone dari repo Fork Anda
 cd D:\Herd
-git clone https://github.com/<username-kamu>/SADESA-.git
-cd SADESA-
+git clone https://github.com/<username-kamu>/SADESA.git
+cd SADESA
 
 # 2. Install dependensi PHP (Composer)
 composer install
@@ -61,7 +61,7 @@ php artisan storage:link
 Kolaborasi menggunakan alur **Fork & Pull Request** agar repositori utama tetap aman dan bebas dari konflik kode (*merge conflict*):
 
 ### 1. Fork Repositori (Sekali di Awal)
-Buka [https://github.com/Kagitaaaaa/SADESA-](https://github.com/Kagitaaaaa/SADESA-) lalu klik tombol **Fork** di pojok kanan atas untuk menyalin repositori ke akun GitHub Anda masing-masing.
+Buka [https://github.com/Kagitaaaaa/SADESA](https://github.com/Kagitaaaaa/SADESA) lalu klik tombol **Fork** di pojok kanan atas untuk menyalin repositori ke akun GitHub Anda masing-masing.
 
 ### 2. Koding Fitur di Komputer Lokal
 ```bash
@@ -78,8 +78,8 @@ git push -u origin feature/nama-fitur-kamu
 ```
 
 ### 3. Buat Pull Request (PR) ke Repositori Utama
-1. Buka halaman GitHub hasil fork Anda: `https://github.com/<username-kamu>/SADESA-`
+1. Buka halaman GitHub hasil fork Anda: `https://github.com/<username-kamu>/SADESA`
 2. Klik tombol hijau **"Contribute"** → pilih **"Open pull request"**.
-3. Pastikan tujuan merge mengarah ke repositori utama (`Kagitaaaaa/SADESA-`).
+3. Pastikan tujuan merge mengarah ke repositori utama (`Kagitaaaaa/SADESA`).
 4. Tulis deskripsi singkat fitur yang selesai dibuat, lalu klik **"Create pull request"**.
 5. Pemilik repositori utama akan mereview dan menggabungkan (*merge*) kodingan Anda.

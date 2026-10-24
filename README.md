@@ -19,7 +19,24 @@ Repository Utama: [https://github.com/Kagitaaaaa/SADESA](https://github.com/Kagi
 
 ---
 
-## 🚀 Setup Proyek (Laravel Herd)
+## 🔑 Akun Pengujian Bawaan
+
+| Role | Email | Password | Hak Akses |
+|---|---|---|---|
+| **Admin Desa** | `admin@sadesa.id` | `password` | Mengelola data master, verifikasi surat, respon aduan |
+| **Kepala Desa** | `kades@sadesa.id` | `password` | Validasi & tanda tangan persetujuan surat |
+| **Warga** | `budi@warga.id` | `password` | Layanan mandiri permohonan surat & riwayat aduan |
+
+---
+
+## 🌿 Alur Kerja Fork & Pull Request (Untuk Rekan Tim)
+
+Kolaborasi menggunakan alur **Fork & Pull Request** agar repositori utama tetap aman dan bebas dari konflik kode (*merge conflict*):
+
+### 1. Fork Repositori (Sekali di Awal)
+Buka [https://github.com/Kagitaaaaa/SADESA](https://github.com/Kagitaaaaa/SADESA) lalu klik tombol **Fork** di pojok kanan atas untuk menyalin repositori ke akun GitHub Anda masing-masing.
+
+## 2. Setup Proyek (Laravel Herd)
 
 Karena menggunakan **Laravel Herd**, setup di komputer lokal sangat praktis:
 
@@ -41,29 +58,8 @@ php artisan migrate:fresh --seed
 php artisan storage:link
 ```
 
-> **Catatan:** Aset CSS & JavaScript tampilan web sudah di-compile di folder `public/build`, jadi Anda **tidak wajib menginstall Node.js / NPM**. Aplikasi langsung aktif dan dapat diakses di browser melalui:  
-👉 **`http://sadesa.test`** (atau nama folder di Laravel Herd Anda)
 
----
-
-## 🔑 Akun Pengujian Bawaan
-
-| Role | Email | Password | Hak Akses |
-|---|---|---|---|
-| **Admin Desa** | `admin@sadesa.id` | `password` | Mengelola data master, verifikasi surat, respon aduan |
-| **Kepala Desa** | `kades@sadesa.id` | `password` | Validasi & tanda tangan persetujuan surat |
-| **Warga** | `budi@warga.id` | `password` | Layanan mandiri permohonan surat & riwayat aduan |
-
----
-
-## 🌿 Alur Kerja Fork & Pull Request (Untuk Rekan Tim)
-
-Kolaborasi menggunakan alur **Fork & Pull Request** agar repositori utama tetap aman dan bebas dari konflik kode (*merge conflict*):
-
-### 1. Fork Repositori (Sekali di Awal)
-Buka [https://github.com/Kagitaaaaa/SADESA](https://github.com/Kagitaaaaa/SADESA) lalu klik tombol **Fork** di pojok kanan atas untuk menyalin repositori ke akun GitHub Anda masing-masing.
-
-### 2. Koding Fitur di Komputer Lokal
+### 3. Koding Fitur di Komputer Lokal
 ```bash
 # 1. Buat branch baru untuk tugas Anda (jangan koding di main)
 git checkout -b feature/nama-fitur-kamu
@@ -79,7 +75,7 @@ git commit -m "feat: menyelesaikan form pengaduan warga"
 git push -u origin feature/nama-fitur-kamu
 ```
 
-### 3. Buat Pull Request (PR) ke Repositori Utama
+### 4. Buat Pull Request (PR) ke Repositori Utama
 1. Buka halaman GitHub hasil fork Anda: `https://github.com/<username-kamu>/SADESA`
 2. Klik tombol hijau **"Contribute"** → pilih **"Open pull request"**.
 3. Pastikan tujuan merge mengarah ke repositori utama (`Kagitaaaaa/SADESA`).

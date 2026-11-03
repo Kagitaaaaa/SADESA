@@ -18,4 +18,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn(Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
+
+        $exceptions->render(function (\Illuminate\Http\Exceptions\PostTooLargeException $e, Request $request) {
+            return back()->with('error', 'Ukuran seluruh berkas lampiran yang diunggah melebihi batas kapasitas server. Mohon pastikan ukuran masing-masing berkas maksimal 4 MB.');
+        });
     })->create();

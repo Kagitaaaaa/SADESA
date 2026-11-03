@@ -17,8 +17,6 @@ class User extends Authenticatable
     public const PERAN = [
         'admin' => 'Administrator',
         'kades' => 'Kepala Desa',
-        'sekdes' => 'Sekretaris Desa',
-        'staf' => 'Staf Pelayanan',
         'warga' => 'Warga',
     ];
 
@@ -66,7 +64,7 @@ class User extends Authenticatable
 
     public function isAdmin(): bool
     {
-        return in_array($this->role, ['admin', 'kades', 'sekdes', 'staf']);
+        return in_array($this->role, ['admin', 'kades']);
     }
 
     public function isWarga(): bool

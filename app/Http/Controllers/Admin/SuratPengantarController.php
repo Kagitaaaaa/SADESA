@@ -94,13 +94,17 @@ class SuratPengantarController extends Controller
     }
 
     /**
-     * Endpoint terpadu untuk keputusan Admin (ACC / SETUJUI atau TOLAK).
+     * Endpoint terpadu untuk keputusan Admin / Kades (Verifikasi Berkas, Sahkan/ACC, atau Tolak).
      */
     public function keputusan(Request $request, $id)
     {
         $this->ensureAdminAccess();
 
         $aksi = strtolower((string) $request->input('keputusan', 'setujui'));
+
+        if ($aksi === 'verifikasi') {
+            return $this->verifikasi($request, $id);
+        }
 
         if ($aksi === 'tolak' || $aksi === 'ditolak') {
             return $this->tolak($request, $id);
@@ -110,8 +114,43 @@ class SuratPengantarController extends Controller
     }
 
     /**
-     * Menyetujui (ACC) surat pengantar, menetapkan Nomor Surat resmi, memilih Aparatur Penandatangan,
-     * menetapkan Metode TTD (qrcode / basah), serta menerbitkan qr_token unik.
+     * Tahap 1 (Alur Berjenjang): Verifikasi kelengkapan berkas fisik/lampiran oleh Admin/Staf Pelayanan,
+     * menyusun draf Nomor Surat, dan meneruskan berkas ke antrean pengesahan Kepala Desa (status: diproses).
+     */
+    public function verifikasi(Request $request, $id)
+    {
+        $adminUser = $this->ensureAdminAccess();
+        $surat = SuratPengantar::with('jenisSurat')->findOrFail($id);
+
+        $validated = $request->validate([
+            'nomor_surat' => ['required', 'string', 'max:100', 'unique:surat_pengantars,nomor_surat,' . $surat->id],
+            'aparatur_id' => ['nullable', 'exists:aparaturs,id'],
+            'ttd_aparatur_id' => ['nullable', 'exists:aparaturs,id'],
+            'tipe_ttd' => ['required', 'in:qrcode,basah'],
+            'catatan_admin' => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        $pejabatId = $validated['aparatur_id'] ?? $validated['ttd_aparatur_id'] ?? Aparatur::where('status_aktif', true)->orderBy('urutan')->value('id');
+
+        $surat->update([
+            'nomor_surat' => trim($validated['nomor_surat']),
+            'aparatur_id' => $pejabatId,
+            'ttd_aparatur_id' => $pejabatId,
+            'diproses_oleh' => $adminUser->id,
+            'tipe_ttd' => $validated['tipe_ttd'],
+            'status' => 'diproses',
+            'alasan_penolakan' => null,
+            'catatan_admin' => $validated['catatan_admin'] ?? ('Berkas persyaratan telah diverifikasi lengkap oleh ' . $adminUser->name . ' dan diteruskan ke Kepala Desa untuk pengesahan resmi.'),
+        ]);
+
+        return redirect()
+            ->route('admin.surat.proses', $surat->id)
+            ->with('success', 'Berkas berhasil diverifikasi lengkap. Surat telah diteruskan ke antrean pengesahan Kepala Desa.');
+    }
+
+    /**
+     * Tahap 2 (Alur Berjenjang): Pengesahan Akhir & Tanda Tangan oleh Kepala Desa (ACC Kades),
+     * menerbitkan QR Code Elektronik resmi atau ruang tanda tangan basah, dan mengaktifkan dokumen cetak (status: disetujui).
      */
     public function setujui(Request $request, $id)
     {
@@ -131,6 +170,10 @@ class SuratPengantarController extends Controller
 
         $qrToken = $surat->qr_token ?: hash('sha256', Str::uuid()->toString() . '|' . $surat->id . '|' . $validated['nomor_surat']);
 
+        $defaultCatatan = $adminUser->role === 'kades'
+            ? 'Surat pengantar telah disetujui dan disahkan secara resmi oleh Kepala Desa Pabelan.'
+            : 'Dokumen persyaratan telah diverifikasi lengkap dan disetujui untuk diterbitkan.';
+
         $surat->update([
             'nomor_surat' => trim($validated['nomor_surat']),
             'aparatur_id' => $pejabatId,
@@ -140,14 +183,18 @@ class SuratPengantarController extends Controller
             'qr_token' => $qrToken,
             'status' => 'disetujui',
             'alasan_penolakan' => null,
-            'catatan_admin' => $validated['catatan_admin'] ?? 'Dokumen persyaratan telah diverifikasi lengkap dan disetujui untuk diterbitkan.',
+            'catatan_admin' => $validated['catatan_admin'] ?? $defaultCatatan,
             'tanggal_disetujui' => now(),
             'tanggal_selesai' => now(),
         ]);
 
+        $pesanSukses = $adminUser->role === 'kades'
+            ? 'Surat pengantar resmi berhasil disahkan oleh Kepala Desa dengan Nomor: ' . $surat->nomor_surat
+            : 'Permohonan surat berhasil disetujui (ACC) dengan Nomor Surat: ' . $surat->nomor_surat;
+
         return redirect()
             ->route('admin.surat.proses', $surat->id)
-            ->with('success', 'Permohonan surat berhasil disetujui (ACC) dengan Nomor Surat: ' . $surat->nomor_surat);
+            ->with('success', $pesanSukses);
     }
 
     /**

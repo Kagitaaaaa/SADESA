@@ -25,7 +25,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         // 1. Modul Kependudukan (Anggota 1)
     Route::prefix('kependudukan')
         ->name('kependudukan.')
-        ->middleware(PeranDiizinkan::class.':admin,kades,sekdes,staf')
+        ->middleware(PeranDiizinkan::class.':admin,kades')
         ->group(function () {
             Route::resource('kartu-keluarga', KartuKeluargaController::class)
                 ->except(['show'])
@@ -55,6 +55,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         // Verifikasi, Keputusan (ACC / Tolak), dan Cetak PDF A4
         Route::get('/{id}/proses', [SuratPengantarController::class, 'proses'])->name('proses');
         Route::post('/{id}/keputusan', [SuratPengantarController::class, 'keputusan'])->name('keputusan');
+        Route::post('/{id}/verifikasi', [SuratPengantarController::class, 'verifikasi'])->name('verifikasi');
         Route::post('/{id}/setujui', [SuratPengantarController::class, 'setujui'])->name('setujui');
         Route::post('/{id}/tolak', [SuratPengantarController::class, 'tolak'])->name('tolak');
         Route::get('/{id}/cetak', [SuratPengantarController::class, 'cetak'])->name('cetak');

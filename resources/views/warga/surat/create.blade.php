@@ -35,6 +35,16 @@
             </x-button>
         </div>
 
+        @if (session('error'))
+            <div class="mb-6 rounded-2xl border-2 border-red-700 bg-red-50 p-5 text-red-950 flex items-start gap-3" role="alert">
+                <svg class="w-5 h-5 text-red-700 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                <div>
+                    <h2 class="text-sm font-extrabold mb-1">Terjadi Kendala Pengunggahan Berkas:</h2>
+                    <p class="text-xs font-medium">{{ session('error') }}</p>
+                </div>
+            </div>
+        @endif
+
         @if ($errors->any())
             <div class="mb-6 rounded-2xl border-2 border-red-700 bg-red-50 p-5 text-red-950" role="alert">
                 <h2 class="text-sm font-extrabold mb-2">Mohon periksa kembali isian formulir Anda:</h2>
@@ -246,7 +256,7 @@
             <div class="bg-white rounded-2xl border-2 border-desa-border p-6 sm:p-8 shadow-xs space-y-6">
                 <div class="pb-4 border-b-2 border-desa-soft">
                     <h2 class="text-lg font-extrabold text-desa-dark">
-                        4. Unggah Berkas Persyaratan (Format JPG, PNG, atau PDF &bull; Maks. 4 MB)
+                        4. Unggah Berkas Persyaratan (Format JPG, PNG, atau PDF &bull; Maks. 10 MB per berkas)
                     </h2>
                     <p class="text-xs text-desa-muted">
                         Lampirkan dokumen persyaratan dasar umum beserta dokumen khusus sesuai jenis surat yang diajukan.
@@ -446,58 +456,12 @@
                 renderFormForJenis(selectJenis.value);
             }
 
-            // Kompresi otomatis gambar besar di sisi browser & validasi batas ukuran POST agar tidak terkena PostTooLargeException (8 MB)
+            // Penanganan pengunggahan berkas secara instan & validasi ukuran sebelum kirim
             const formSurat = document.getElementById('form-ajukan-surat');
-
-            function compressImageFile(file, maxDim = 1600, quality = 0.8) {
-                return new Promise(function (resolve) {
-                    if (!file || !file.type.startsWith('image/') || file.size <= 500 * 1024) {
-                        resolve(file);
-                        return;
-                    }
-                    const reader = new FileReader();
-                    reader.onload = function (ev) {
-                        const img = new Image();
-                        img.onload = function () {
-                            let w = img.width;
-                            let h = img.height;
-                            if (w > maxDim || h > maxDim) {
-                                if (w > h) {
-                                    h = Math.round((h * maxDim) / w);
-                                    w = maxDim;
-                                } else {
-                                    w = Math.round((w * maxDim) / h);
-                                    h = maxDim;
-                                }
-                            }
-                            const canvas = document.createElement('canvas');
-                            canvas.width = w;
-                            canvas.height = h;
-                            const ctx = canvas.getContext('2d');
-                            ctx.drawImage(img, 0, 0, w, h);
-                            canvas.toBlob(function (blob) {
-                                if (!blob || blob.size >= file.size) {
-                                    resolve(file);
-                                    return;
-                                }
-                                const baseName = file.name.replace(/\.[^.]+$/, '');
-                                const compressed = new File([blob], baseName + '.jpg', {
-                                    type: 'image/jpeg',
-                                    lastModified: Date.now()
-                                });
-                                resolve(compressed);
-                            }, 'image/jpeg', quality);
-                        };
-                        img.onerror = function () { resolve(file); };
-                        img.src = ev.target.result;
-                    };
-                    reader.onerror = function () { resolve(file); };
-                    reader.readAsDataURL(file);
-                });
-            }
+            let isSubmitting = false;
 
             if (formSurat) {
-                formSurat.addEventListener('change', async function (e) {
+                formSurat.addEventListener('change', function (e) {
                     const input = e.target;
                     if (!input || input.type !== 'file' || !input.files || !input.files[0]) return;
                     const file = input.files[0];
@@ -510,32 +474,26 @@
                         input.parentElement.appendChild(infoEl);
                     }
 
-                    if (file.type === 'application/pdf' && file.size > 2.5 * 1024 * 1024) {
+                    if (file.size > 10 * 1024 * 1024) {
                         infoEl.className = 'text-[11px] font-bold text-red-700 mt-1.5';
-                        infoEl.textContent = 'Ukuran PDF terlalu besar (' + (file.size / (1024 * 1024)).toFixed(1) + ' MB). Maksimal 2,5 MB per file PDF.';
+                        infoEl.textContent = 'Ukuran berkas terlalu besar (' + (file.size / (1024 * 1024)).toFixed(1) + ' MB). Maksimal 10 MB per berkas.';
                         input.value = '';
                         return;
                     }
 
-                    if (file.type.startsWith('image/') && file.size > 500 * 1024) {
-                        infoEl.className = 'text-[11px] font-semibold text-desa-action mt-1.5';
-                        infoEl.textContent = 'Mengoptimalkan ukuran foto untuk pengiriman cepat...';
-                        const compressed = await compressImageFile(file);
-                        if (compressed && compressed !== file && typeof DataTransfer !== 'undefined') {
-                            const dt = new DataTransfer();
-                            dt.items.add(compressed);
-                            input.files = dt.files;
-                            infoEl.className = 'text-[11px] font-bold text-emerald-900 mt-1.5';
-                            infoEl.textContent = 'Siap diunggah: ' + compressed.name + ' (' + Math.round(compressed.size / 1024) + ' KB)';
-                            return;
-                        }
-                    }
-
-                    infoEl.className = 'text-[11px] font-semibold text-desa-muted mt-1.5';
-                    infoEl.textContent = 'Siap diunggah: ' + file.name + ' (' + Math.round(file.size / 1024) + ' KB)';
+                    const displaySize = file.size >= 1024 * 1024
+                        ? (file.size / (1024 * 1024)).toFixed(1) + ' MB'
+                        : Math.round(file.size / 1024) + ' KB';
+                    infoEl.className = 'text-[11px] font-semibold text-desa-dark mt-1.5';
+                    infoEl.innerHTML = '<span class="text-emerald-800 font-bold">&check; Siap diunggah:</span> ' + escapeHtml(file.name) + ' (' + displaySize + ')';
                 });
 
                 formSurat.addEventListener('submit', function (e) {
+                    if (isSubmitting) {
+                        e.preventDefault();
+                        return false;
+                    }
+
                     const fileInputs = formSurat.querySelectorAll('input[type="file"]');
                     let totalBytes = 0;
                     fileInputs.forEach(function (inp) {
@@ -543,9 +501,19 @@
                             totalBytes += inp.files[0].size;
                         }
                     });
-                    if (totalBytes > 7 * 1024 * 1024) {
+
+                    if (totalBytes > 30 * 1024 * 1024) {
                         e.preventDefault();
-                        alert('Total ukuran seluruh berkas lampiran (' + (totalBytes / (1024 * 1024)).toFixed(1) + ' MB) melebihi batas pengiriman server (7 MB). Mohon gunakan file PDF/foto dengan ukuran lebih kecil.');
+                        alert('Total ukuran seluruh berkas lampiran (' + (totalBytes / (1024 * 1024)).toFixed(1) + ' MB) melebihi batas pengiriman server (30 MB). Mohon gunakan berkas dengan ukuran lebih kecil.');
+                        return false;
+                    }
+
+                    isSubmitting = true;
+                    const submitBtn = formSurat.querySelector('button[type="submit"]');
+                    if (submitBtn) {
+                        submitBtn.style.pointerEvents = 'none';
+                        submitBtn.classList.add('opacity-75', 'cursor-wait');
+                        submitBtn.innerHTML = '<svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Sedang Mengirim Permohonan...';
                     }
                 });
             }

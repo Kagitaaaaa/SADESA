@@ -31,7 +31,7 @@
             <span>Data Warga</span>
         </a>
 
-        @if (auth()->check() && in_array(auth()->user()->role, ['admin', 'kades', 'sekdes']))
+        @if (auth()->check() && auth()->user()->role === 'admin')
             <a
                 href="{{ route('admin.kependudukan.user.index') }}"
                 class="min-h-[44px] inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold border-2 transition-colors {{ $aktifTab === 'user' ? 'bg-desa-dark text-white border-desa-dark shadow-xs' : 'bg-white text-desa-dark border-desa-border hover:bg-desa-soft' }}"

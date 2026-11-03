@@ -134,11 +134,20 @@ class SuratController extends Controller
                 $isRequired ? 'required' : 'nullable',
                 'file',
                 'mimes:jpg,jpeg,png,pdf',
-                'max:4096',
+                'max:10240',
             ];
         }
 
-        $validated = $request->validate($rules);
+        $messages = [
+            'berkas.*.max' => 'Ukuran berkas lampiran tidak boleh melebihi 10 MB per file.',
+            'berkas.*.mimes' => 'Format berkas lampiran harus berupa JPG, JPEG, PNG, atau PDF.',
+            'berkas.*.file' => 'Berkas yang diunggah tidak valid atau rusak.',
+            'berkas.*.required' => 'Dokumen persyaratan wajib dilampirkan.',
+            'keperluan.required' => 'Keperluan permohonan surat wajib diisi.',
+            'keperluan.min' => 'Keperluan permohonan surat minimal 10 karakter.',
+        ];
+
+        $validated = $request->validate($rules, $messages);
 
         // Simpan seluruh berkas yang diunggah ke storage/app/public/lampiran-surat
         $berkasTersimpan = [];

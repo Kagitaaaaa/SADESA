@@ -129,7 +129,7 @@
                                 data-dropdown-btn
                                 class="px-3 xl:px-3.5 py-2 min-h-[44px] inline-flex items-center gap-1.5 rounded-lg text-sm font-bold transition-colors cursor-pointer {{ in_array($activeNav, ['kependudukan', 'kk', 'warga', 'user']) ? 'text-desa-action font-extrabold underline decoration-2 underline-offset-8' : 'text-desa-dark hover:text-desa-action' }}"
                             >
-                                <span>Kependudukan &amp; Akun</span>
+                                <span>{{ auth()->user()->role === 'kades' ? 'Data Kependudukan' : 'Kependudukan & Akun' }}</span>
                                 <svg class="w-4 h-4 text-desa-action transition-transform duration-150" data-dropdown-chevron fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
                                 </svg>
@@ -141,9 +141,11 @@
                                 <a href="{{ route('admin.kependudukan.warga.index') }}" class="flex items-center min-h-[44px] px-4 py-2 text-sm font-semibold text-desa-dark hover:bg-desa-soft">
                                     Data Warga
                                 </a>
-                                <a href="{{ route('admin.kependudukan.user.index') }}" class="flex items-center min-h-[44px] px-4 py-2 text-sm font-semibold text-desa-dark hover:bg-desa-soft">
-                                    Akun Pengguna
-                                </a>
+                                @if (auth()->user()->role === 'admin')
+                                    <a href="{{ route('admin.kependudukan.user.index') }}" class="flex items-center min-h-[44px] px-4 py-2 text-sm font-semibold text-desa-dark hover:bg-desa-soft">
+                                        Akun Pengguna
+                                    </a>
+                                @endif
                             </div>
                         </div>
 
@@ -162,11 +164,13 @@
                             </button>
                             <div data-dropdown-menu class="hidden absolute left-0 mt-1 w-64 rounded-xl bg-white border-2 border-desa-border shadow-lg py-2 z-50">
                                 <a href="{{ route('admin.surat.index') }}" class="flex items-center min-h-[44px] px-4 py-2 text-sm font-semibold text-desa-dark hover:bg-desa-soft">
-                                    Antrean Verifikasi E-Surat
+                                    {{ auth()->user()->role === 'kades' ? 'Antrean Pengesahan E-Surat' : 'Antrean Verifikasi E-Surat' }}
                                 </a>
-                                <a href="{{ route('admin.surat.jenis') }}" class="flex items-center min-h-[44px] px-4 py-2 text-sm font-semibold text-desa-dark hover:bg-desa-soft">
-                                    Master 14 Jenis Surat
-                                </a>
+                                @if (auth()->user()->role === 'admin')
+                                    <a href="{{ route('admin.surat.jenis') }}" class="flex items-center min-h-[44px] px-4 py-2 text-sm font-semibold text-desa-dark hover:bg-desa-soft">
+                                        Master 14 Jenis Surat
+                                    </a>
+                                @endif
                             </div>
                         </div>
 
@@ -458,10 +462,10 @@
             >
                 @if (auth()->check() && auth()->user()->isAdmin())
                     <a href="{{ route('admin.kependudukan.kk.index') }}" class="flex items-center min-h-[44px] px-3 py-2 rounded-lg text-sm font-semibold {{ in_array($activeNav, ['kependudukan', 'kk', 'warga', 'user']) ? 'bg-desa-action text-white' : 'text-desa-dark hover:bg-desa-bright' }}">
-                        Kependudukan &amp; Akun Pengguna
+                        {{ auth()->user()->role === 'kades' ? 'Data Kependudukan' : 'Kependudukan & Akun Pengguna' }}
                     </a>
                     <a href="{{ route('admin.surat.index') }}" class="flex items-center min-h-[44px] px-3 py-2 rounded-lg text-sm font-semibold {{ in_array($activeNav, ['surat', 'jenis-surat']) ? 'bg-desa-action text-white' : 'text-desa-dark hover:bg-desa-bright' }}">
-                        Layanan E-Surat Desa
+                        {{ auth()->user()->role === 'kades' ? 'Pengesahan E-Surat Kades' : 'Layanan E-Surat Desa' }}
                     </a>
                     <a href="{{ route('admin.pengaduan.index') }}" class="flex items-center min-h-[44px] px-3 py-2 rounded-lg text-sm font-semibold {{ $activeNav === 'pengaduan' ? 'bg-desa-action text-white' : 'text-desa-dark hover:bg-desa-bright' }}">
                         Pengaduan Warga

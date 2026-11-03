@@ -92,16 +92,28 @@
                     Ajukan Ulang Surat Ini
                 </a>
             </div>
+        @elseif ($surat->status === 'diproses')
+            <div class="mb-6 rounded-2xl border-2 border-desa-action bg-desa-soft p-5 text-desa-dark space-y-1">
+                <span class="inline-block px-2.5 py-0.5 rounded bg-desa-action text-white text-xs font-bold mb-1">
+                    STATUS: TAHAP 2 • LOLOS VERIFIKASI • MENUNGGU PENGESAHAN KEPALA DESA
+                </span>
+                <h2 class="text-base font-extrabold">
+                    Dokumen Anda Sedang Menunggu Tanda Tangan Resmi Kepala Desa Pabelan
+                </h2>
+                <p class="text-xs mt-0.5 text-desa-muted">
+                    Persyaratan berkas telah diverifikasi lengkap oleh staf pelayanan. Setelah Kepala Desa membubuhkan tanda tangan elektronik QR Code, dokumen resmi A4 siap diunduh dan dicetak secara mandiri.
+                </p>
+            </div>
         @else
-            <div class="mb-6 rounded-2xl border-2 border-amber-600 bg-amber-50 p-5 text-amber-950">
+            <div class="mb-6 rounded-2xl border-2 border-amber-600 bg-amber-50 p-5 text-amber-950 space-y-1">
                 <span class="inline-block px-2.5 py-0.5 rounded bg-amber-700 text-white text-xs font-bold mb-1">
-                    STATUS: {{ $surat->status === 'diproses' ? 'SEDANG DIPROSES PERANGKAT DESA' : 'MENUNGGU VERIFIKASI ADMIN DESA' }}
+                    STATUS: TAHAP 1 • MENUNGGU VERIFIKASI BERKAS STAF PELAYANAN
                 </span>
                 <h2 class="text-base font-extrabold">
                     Permohonan Anda Sedang Dalam Antrean Pemeriksaan Berkas
                 </h2>
                 <p class="text-xs mt-0.5">
-                    Perangkat Desa Pabelan sedang memeriksa kelengkapan dokumen persyaratan Anda. Setelah disetujui, tombol unduh PDF A4 ber-kop resmi akan otomatis muncul di halaman ini.
+                    Staf pelayanan Desa Pabelan sedang memeriksa kelengkapan dokumen persyaratan Anda. Anda dapat memantau perkembangan status verifikasi secara berkala di halaman ini.
                 </p>
             </div>
         @endif

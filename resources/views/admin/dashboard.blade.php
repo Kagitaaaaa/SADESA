@@ -1,4 +1,4 @@
-<x-admin-layout title="Dashboard Utama Administrator" activeMenu="dashboard" subtitle="Selamat datang di panel kendali pelayanan dan administrasi Pemerintah Desa Pabelan.">
+<x-admin-layout :title="auth()->user()->role === 'kades' ? 'Dashboard Eksekutif Kepala Desa' : 'Dashboard Utama Administrator'" activeMenu="dashboard" :subtitle="auth()->user()->role === 'kades' ? 'Panel kendali pengesahan surat dan pengawasan layanan masyarakat Pemerintah Desa Pabelan.' : 'Selamat datang di panel kendali pelayanan dan administrasi Pemerintah Desa Pabelan.'">
     <div class="space-y-6">
         <!-- Section Card Data Penduduk -->
         @include('admin.kependudukan._tab', ['aktif' => 'dashboard'])
@@ -13,18 +13,22 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                         </svg>
                     </div>
-                    <h3 class="text-base font-extrabold text-desa-dark">Layanan E-Surat</h3>
+                    <h3 class="text-base font-extrabold text-desa-dark">
+                        {{ auth()->user()->role === 'kades' ? 'Pengesahan E-Surat Kades' : 'Layanan E-Surat' }}
+                    </h3>
                     <p class="text-xs text-desa-muted mt-1 leading-relaxed">
-                        Verifikasi berkas pemohon surat pengantar, penerbitan nomor surat resmi, dan pengesahan TTD elektronik QR Code.
+                        {{ auth()->user()->role === 'kades' ? 'Pengesahan tanda tangan elektronik QR Code dan persetujuan resmi permohonan surat warga.' : 'Verifikasi berkas pemohon surat pengantar, penerbitan nomor surat resmi, dan pengesahan TTD elektronik QR Code.' }}
                     </p>
                 </div>
                 <div class="mt-5 flex flex-wrap gap-2">
-                    <x-button variant="primary" href="{{ route('admin.surat.index') }}">
-                        Antrean Verifikasi
+                    <x-button variant="primary" href="{{ route('admin.surat.index', auth()->user()->role === 'kades' ? ['status' => 'diproses'] : []) }}">
+                        {{ auth()->user()->role === 'kades' ? 'Antrean Butuh Pengesahan' : 'Antrean Verifikasi' }}
                     </x-button>
-                    <x-button variant="secondary" href="{{ route('admin.surat.jenis') }}">
-                        Master Jenis Surat
-                    </x-button>
+                    @if (auth()->user()->role === 'admin')
+                        <x-button variant="secondary" href="{{ route('admin.surat.jenis') }}">
+                            Master Jenis Surat
+                        </x-button>
+                    @endif
                 </div>
             </div>
 

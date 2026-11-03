@@ -20,7 +20,7 @@
                 href="{{ route('admin.surat.index', array_filter(['status' => 'pending', 'q' => $pencarian, 'jenis_surat_id' => $jenisFilter])) }}"
                 class="min-h-[44px] inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold border-2 transition-colors {{ $statusFilter === 'pending' ? 'bg-amber-600 text-white border-amber-700' : 'bg-white text-desa-dark border-desa-border hover:bg-desa-soft' }}"
             >
-                <span>Menunggu Verifikasi</span>
+                <span>Tahap 1: Verifikasi Berkas</span>
                 <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-950 font-mono">{{ $statistik['pending'] ?? 0 }}</span>
             </a>
 
@@ -28,7 +28,7 @@
                 href="{{ route('admin.surat.index', array_filter(['status' => 'diproses', 'q' => $pencarian, 'jenis_surat_id' => $jenisFilter])) }}"
                 class="min-h-[44px] inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold border-2 transition-colors {{ $statusFilter === 'diproses' ? 'bg-desa-action text-white border-desa-dark' : 'bg-white text-desa-dark border-desa-border hover:bg-desa-soft' }}"
             >
-                <span>Sedang Diproses</span>
+                <span>Tahap 2: Pengesahan Kades</span>
                 <span class="px-2 py-0.5 rounded bg-desa-soft text-desa-dark font-mono">{{ $statistik['diproses'] ?? 0 }}</span>
             </a>
 
@@ -125,19 +125,19 @@
                                 @php
                                     $badge = match ($surat->status) {
                                         'disetujui', 'selesai' => [
-                                            'label' => 'Disetujui / Selesai',
+                                            'label' => 'Disetujui & Diterbitkan',
                                             'class' => 'bg-emerald-100 text-emerald-950 border-emerald-700',
                                         ],
                                         'diproses' => [
-                                            'label' => 'Sedang Diproses',
-                                            'class' => 'bg-desa-soft text-desa-dark border-desa-border',
+                                            'label' => 'Menunggu ACC Kades',
+                                            'class' => 'bg-indigo-100 text-indigo-950 border-indigo-600',
                                         ],
                                         'ditolak' => [
                                             'label' => 'Ditolak',
                                             'class' => 'bg-red-100 text-red-950 border-red-700',
                                         ],
                                         default => [
-                                            'label' => 'Menunggu Verifikasi',
+                                            'label' => 'Verifikasi Berkas',
                                             'class' => 'bg-amber-100 text-amber-950 border-amber-600',
                                         ],
                                     };
@@ -199,9 +199,15 @@
                                         <div class="inline-flex flex-wrap justify-end gap-2">
                                             <a
                                                 href="{{ route('admin.surat.proses', $surat->id) }}"
-                                                class="min-h-[40px] inline-flex items-center px-3.5 py-1.5 rounded-lg bg-desa-soft text-desa-dark border border-desa-border text-xs font-bold hover:bg-desa-bright transition-colors"
+                                                class="min-h-[40px] inline-flex items-center px-3.5 py-1.5 rounded-lg text-xs font-bold transition-colors {{ auth()->user()->role === 'kades' && $surat->status === 'diproses' ? 'bg-desa-action text-white hover:bg-desa-dark' : 'bg-desa-soft text-desa-dark border border-desa-border hover:bg-desa-bright' }}"
                                             >
-                                                Verifikasi &amp; Keputusan
+                                                @if (auth()->user()->role === 'kades' && $surat->status === 'diproses')
+                                                    Pengesahan Kades (ACC)
+                                                @elseif ($surat->status === 'pending')
+                                                    Verifikasi Berkas
+                                                @else
+                                                    Detail &amp; Proses
+                                                @endif
                                             </a>
                                             @if (in_array($surat->status, ['disetujui', 'selesai']))
                                                 <a

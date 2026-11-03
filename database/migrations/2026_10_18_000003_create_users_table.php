@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name', 100);
             $table->string('email', 100)->unique();
             $table->string('password');
-            $table->string('role', 20)->default('warga'); // admin, kades, sekdes, staf, warga
+            $table->string('role', 20)->default('warga'); // admin, kades, warga
             $table->string('avatar')->nullable();
             $table->rememberToken();
             $table->timestamps();

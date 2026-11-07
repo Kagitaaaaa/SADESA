@@ -4,19 +4,36 @@
             <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
                 <div class="max-w-3xl">
                     <span class="inline-block px-3 py-1 rounded-md bg-desa-soft text-desa-dark border border-desa-border text-xs font-bold mb-2">
-                        Layanan Pengaduan Warga
+                        Layanan Pengaduan Warga &bull; Desa Pabelan
                     </span>
                     <h1 class="text-2xl sm:text-3xl font-extrabold text-desa-dark tracking-tight">
                         Sampaikan Pengaduan &amp; Aspirasi
                     </h1>
                     <p class="text-sm text-desa-muted mt-2">
-                        Isi informasi dengan jelas agar Pemerintah Desa dapat menindaklanjuti laporan Anda. Setelah dikirim, simpan kode tiket untuk memantau status.
+                        Isi informasi dengan jelas agar Pemerintah Desa Pabelan dapat menindaklanjuti laporan Anda. Setelah dikirim, simpan kode tiket untuk memantau status.
                     </p>
                 </div>
                 <x-button variant="secondary" href="{{ route('warga.pengaduan.index') }}">
                     Lihat Riwayat Pengaduan Saya
                 </x-button>
             </div>
+
+            @auth
+                <div class="rounded-xl border-2 border-desa-border bg-white p-4 shadow-xs flex flex-wrap items-center justify-between gap-3 text-xs text-desa-dark">
+                    <div class="flex items-center gap-2.5">
+                        <span class="w-7 h-7 rounded-full bg-desa-action text-white flex items-center justify-center font-bold text-xs shrink-0">&check;</span>
+                        <div>
+                            <p class="font-bold text-desa-dark">Pelapor Terautentikasi: {{ auth()->user()->name }} ({{ auth()->user()->email }})</p>
+                            <p class="text-[11px] text-desa-muted">Laporan ini akan otomatis tercatat ke buku riwayat pengaduan akun Anda.</p>
+                        </div>
+                    </div>
+                    @if (auth()->user()->warga)
+                        <span class="px-2.5 py-1 rounded-md bg-desa-soft border border-desa-border font-mono text-[11px] font-bold">
+                            NIK: {{ auth()->user()->warga->nik }}
+                        </span>
+                    @endif
+                </div>
+            @endauth
 
             @if (session('sukses'))
                 <div class="rounded-xl border-2 border-emerald-700 bg-emerald-50 p-4 text-emerald-950 text-sm font-semibold" role="status">
@@ -38,7 +55,34 @@
             >
                 @csrf
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div class="rounded-xl border-2 border-desa-border bg-desa-mist p-4">
+                    <label for="is_anonim" class="flex min-h-[44px] items-center gap-3 cursor-pointer">
+                        <input
+                            type="checkbox"
+                            id="is_anonim"
+                            name="is_anonim"
+                            value="1"
+                            @checked(old('is_anonim'))
+                            class="h-5 w-5 rounded border-2 border-desa-border text-desa-action focus:ring-2 focus:ring-desa-action"
+                        />
+                        <span class="text-sm font-bold text-desa-dark">Kirim sebagai pengaduan anonim (sembunyikan identitas saya)</span>
+                    </label>
+                    <p class="text-xs text-desa-muted ml-8">
+                        Jika dicentang, nama lengkap dan nomor HP Anda tidak akan disimpan maupun ditampilkan kepada admin desa dan publik.
+                    </p>
+                    @error('is_anonim')
+                        <p class="text-xs font-bold text-red-600 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div id="identitas-anonim-notice" class="{{ old('is_anonim') ? '' : 'hidden' }} rounded-xl border-2 border-desa-border bg-desa-soft/70 p-4 text-xs text-desa-dark">
+                    <p class="font-extrabold text-sm text-desa-dark">Mode Pengaduan Anonim Aktif</p>
+                    <p class="mt-1 text-desa-muted">
+                        Identitas Anda akan tercatat sebagai <span class="font-bold text-desa-dark">Pelapor Anonim</span> dan nomor telepon Anda dirahasiakan sepenuhnya.
+                    </p>
+                </div>
+
+                <div id="identitas-pelapor-fields" class="{{ old('is_anonim') ? 'hidden' : 'grid' }} grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                         <label for="nama_pelapor" class="block text-xs font-bold text-desa-dark mb-1">
                             Nama Pelapor <span class="text-red-600">*</span>
@@ -47,8 +91,8 @@
                             type="text"
                             id="nama_pelapor"
                             name="nama_pelapor"
-                            value="{{ old('nama_pelapor') }}"
-                            required
+                            value="{{ old('nama_pelapor', auth()->user()?->name ?? '') }}"
+                            {{ old('is_anonim') ? 'disabled' : 'required' }}
                             maxlength="100"
                             autocomplete="name"
                             class="w-full min-h-[44px] px-3.5 py-2 rounded-lg bg-desa-mist border-2 border-desa-border text-sm text-desa-dark focus:outline-none focus:ring-2 focus:ring-desa-action"
@@ -67,8 +111,8 @@
                             type="tel"
                             id="no_hp"
                             name="no_hp"
-                            value="{{ old('no_hp') }}"
-                            required
+                            value="{{ old('no_hp', auth()->user()?->warga?->no_hp ?? '') }}"
+                            {{ old('is_anonim') ? 'disabled' : 'required' }}
                             maxlength="25"
                             autocomplete="tel"
                             class="w-full min-h-[44px] px-3.5 py-2 rounded-lg bg-desa-mist border-2 border-desa-border text-sm text-desa-dark focus:outline-none focus:ring-2 focus:ring-desa-action"
@@ -115,13 +159,14 @@
                         <p class="text-xs font-bold text-red-600 mt-1">{{ $message }}</p>
                     @enderror
 
-                    <div class="mt-4">
+                    <div class="mt-4 relative z-0 isolate">
                         <p id="peta-petunjuk" class="text-sm text-desa-muted mb-2">
                             Klik peta untuk memilih titik kejadian. Koordinat akan mengisi kolom lokasi dan masih dapat Anda ubah.
                         </p>
                         <div
                             id="peta-lokasi"
-                            class="h-72 sm:h-96 w-full rounded-lg border-2 border-desa-border overflow-hidden bg-desa-soft"
+                            class="relative z-0 isolate h-72 sm:h-96 w-full rounded-lg border-2 border-desa-border overflow-hidden bg-desa-soft"
+                            style="isolation: isolate; z-index: 0; position: relative;"
                             role="region"
                             aria-label="Peta interaktif untuk memilih lokasi kejadian"
                             aria-describedby="peta-petunjuk"
@@ -183,24 +228,6 @@
                     @enderror
                 </div>
 
-                <div class="rounded-xl border-2 border-desa-border bg-desa-mist p-4">
-                    <label for="is_anonim" class="flex min-h-[44px] items-center gap-3 cursor-pointer">
-                        <input
-                            type="checkbox"
-                            id="is_anonim"
-                            name="is_anonim"
-                            value="1"
-                            @checked(old('is_anonim'))
-                            class="h-5 w-5 rounded border-2 border-desa-border text-desa-action focus:ring-2 focus:ring-desa-action"
-                        />
-                        <span class="text-sm font-bold text-desa-dark">Kirim sebagai pengaduan anonim</span>
-                    </label>
-                    <p class="text-xs text-desa-muted ml-8">Identitas tetap digunakan untuk keperluan tindak lanjut dan tidak ditampilkan pada hasil pelacakan publik.</p>
-                    @error('is_anonim')
-                        <p class="text-xs font-bold text-red-600 mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
                 <div class="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-1">
                     <x-button variant="secondary" href="{{ route('pengaduan.lacak') }}">Lacak Tiket</x-button>
                     <x-button variant="primary" type="submit">Kirim Pengaduan</x-button>
@@ -222,6 +249,28 @@
     ></script>
     <script>
         (() => {
+            const anonimCheckbox = document.getElementById('is_anonim');
+            const identitasFields = document.getElementById('identitas-pelapor-fields');
+            const identitasNotice = document.getElementById('identitas-anonim-notice');
+            const namaInput = document.getElementById('nama_pelapor');
+            const noHpInput = document.getElementById('no_hp');
+
+            if (anonimCheckbox && identitasFields && identitasNotice && namaInput && noHpInput) {
+                const syncAnonimState = () => {
+                    const isAnonim = anonimCheckbox.checked;
+                    identitasFields.classList.toggle('hidden', isAnonim);
+                    identitasFields.classList.toggle('grid', !isAnonim);
+                    identitasNotice.classList.toggle('hidden', !isAnonim);
+                    namaInput.disabled = isAnonim;
+                    namaInput.required = !isAnonim;
+                    noHpInput.disabled = isAnonim;
+                    noHpInput.required = !isAnonim;
+                };
+
+                anonimCheckbox.addEventListener('change', syncAnonimState);
+                syncAnonimState();
+            }
+
             const mapElement = document.getElementById('peta-lokasi');
             const locationInput = document.getElementById('lokasi');
             const mapStatus = document.getElementById('peta-status');

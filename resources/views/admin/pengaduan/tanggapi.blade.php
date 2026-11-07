@@ -34,14 +34,22 @@
                 <dl class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-sm">
                     <div>
                         <dt class="text-xs font-bold text-desa-muted">Nama Pelapor</dt>
-                        <dd class="mt-1 font-semibold text-desa-dark">{{ $pengaduan->nama_pelapor }}</dd>
                         @if ($pengaduan->is_anonim)
-                            <dd class="mt-1 text-xs font-bold text-desa-action">Memilih pengaduan anonim</dd>
+                            <dd class="mt-1 font-semibold text-desa-dark">Pelapor Anonim</dd>
+                            <dd class="mt-1 inline-flex px-2.5 py-0.5 rounded-full bg-desa-soft text-desa-dark border border-desa-border text-xs font-bold">
+                                Identitas Dirahasiakan (Anonim)
+                            </dd>
+                        @else
+                            <dd class="mt-1 font-semibold text-desa-dark">{{ $pengaduan->nama_pelapor }}</dd>
                         @endif
                     </div>
                     <div>
                         <dt class="text-xs font-bold text-desa-muted">Nomor HP</dt>
-                        <dd class="mt-1 font-semibold text-desa-dark">{{ $pengaduan->no_hp }}</dd>
+                        @if ($pengaduan->is_anonim)
+                            <dd class="mt-1 font-semibold text-desa-muted">Dirahasiakan (Pengaduan Anonim)</dd>
+                        @else
+                            <dd class="mt-1 font-semibold text-desa-dark">{{ $pengaduan->no_hp }}</dd>
+                        @endif
                     </div>
                     <div>
                         <dt class="text-xs font-bold text-desa-muted">Kategori</dt>

@@ -91,6 +91,10 @@
             outline: 3px solid #1D4ED8;
             outline-offset: 2px;
         }
+        .leaflet-container {
+            isolation: isolate;
+            z-index: 0 !important;
+        }
     </style>
 </head>
 <body class="bg-desa-mist text-desa-dark font-sans min-h-screen flex flex-col antialiased selection:bg-desa-bright selection:text-desa-dark">

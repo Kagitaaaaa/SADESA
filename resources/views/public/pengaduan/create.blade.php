@@ -90,20 +90,37 @@
                         @enderror
                     </div>
 
-                    <div>
-                        <label for="lokasi" class="block text-xs font-bold text-desa-dark mb-1">Lokasi Kejadian</label>
-                        <input
-                            type="text"
-                            id="lokasi"
-                            name="lokasi"
-                            value="{{ old('lokasi') }}"
-                            maxlength="150"
-                            class="w-full min-h-[44px] px-3.5 py-2 rounded-lg bg-desa-mist border-2 border-desa-border text-sm text-desa-dark focus:outline-none focus:ring-2 focus:ring-desa-action"
-                            placeholder="Contoh: Jalan Melati, RT 02/RW 01"
-                        />
-                        @error('lokasi')
-                            <p class="text-xs font-bold text-red-600 mt-1">{{ $message }}</p>
-                        @enderror
+                </div>
+
+                <div>
+                    <label for="lokasi" class="block text-xs font-bold text-desa-dark mb-1">Lokasi Kejadian</label>
+                    <input
+                        type="text"
+                        id="lokasi"
+                        name="lokasi"
+                        value="{{ old('lokasi') }}"
+                        maxlength="150"
+                        class="w-full min-h-[44px] px-3.5 py-2 rounded-lg bg-desa-mist border-2 border-desa-border text-sm text-desa-dark focus:outline-none focus:ring-2 focus:ring-desa-action"
+                        placeholder="Pilih titik di peta atau ketik alamat/lokasi"
+                    />
+                    @error('lokasi')
+                        <p class="text-xs font-bold text-red-600 mt-1">{{ $message }}</p>
+                    @enderror
+
+                    <div class="mt-4">
+                        <p id="peta-petunjuk" class="text-sm text-desa-muted mb-2">
+                            Klik peta untuk memilih titik kejadian. Koordinat akan mengisi kolom lokasi dan masih dapat Anda ubah.
+                        </p>
+                        <div
+                            id="peta-lokasi"
+                            class="h-72 sm:h-96 w-full rounded-lg border-2 border-desa-border overflow-hidden bg-desa-soft"
+                            role="region"
+                            aria-label="Peta interaktif untuk memilih lokasi kejadian"
+                            aria-describedby="peta-petunjuk"
+                        ></div>
+                        <p id="peta-status" class="text-xs text-desa-muted mt-2" role="status" aria-live="polite">
+                            Memuat peta OpenStreetMap...
+                        </p>
                     </div>
                 </div>
 
@@ -183,4 +200,72 @@
             </form>
         </div>
     </x-section-wrapper>
+
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+        crossorigin=""
+    />
+    <script
+        src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""
+    ></script>
+    <script>
+        (() => {
+            const mapElement = document.getElementById('peta-lokasi');
+            const locationInput = document.getElementById('lokasi');
+            const mapStatus = document.getElementById('peta-status');
+
+            if (!mapElement || !locationInput || !mapStatus) {
+                return;
+            }
+
+            if (!window.L) {
+                mapStatus.textContent = 'Peta tidak dapat dimuat. Anda tetap dapat mengisi lokasi secara manual.';
+                return;
+            }
+
+            const defaultCenter = [-7.56, 110.75];
+            const coordinateMatch = locationInput.value.match(
+                /Lat:\s*(-?\d+(?:\.\d+)?),\s*Lng:\s*(-?\d+(?:\.\d+)?)/i
+            );
+            const initialCenter = coordinateMatch
+                ? [Number(coordinateMatch[1]), Number(coordinateMatch[2])]
+                : defaultCenter;
+            const map = L.map(mapElement).setView(initialCenter, coordinateMatch ? 16 : 13);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            }).addTo(map);
+
+            let marker = coordinateMatch ? L.marker(initialCenter).addTo(map) : null;
+
+            if (coordinateMatch) {
+                mapStatus.textContent = `Titik terpilih: ${initialCenter[0].toFixed(6)}, ${initialCenter[1].toFixed(6)}`;
+            } else {
+                mapStatus.textContent = 'Belum ada titik dipilih.';
+            }
+
+            map.on('click', (event) => {
+                const { lat, lng } = event.latlng;
+                const coordinates = `Lat: ${lat.toFixed(6)}, Lng: ${lng.toFixed(6)}`;
+
+                locationInput.value = coordinates;
+                locationInput.dispatchEvent(new Event('input', { bubbles: true }));
+
+                if (marker) {
+                    marker.setLatLng(event.latlng);
+                } else {
+                    marker = L.marker(event.latlng).addTo(map);
+                }
+
+                mapStatus.textContent = `Titik terpilih: ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+            });
+
+            window.setTimeout(() => map.invalidateSize(), 0);
+        })();
+    </script>
 </x-app-layout>

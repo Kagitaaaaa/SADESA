@@ -19,6 +19,12 @@
                 </div>
             @endif
 
+            @error('pengaduan')
+                <div class="rounded-xl border-2 border-red-700 bg-red-50 p-4 text-red-950 text-sm font-semibold" role="alert">
+                    {{ $message }}
+                </div>
+            @enderror
+
             <form
                 action="{{ route('pengaduan.store') }}"
                 method="POST"
@@ -99,7 +105,7 @@
                         id="lokasi"
                         name="lokasi"
                         value="{{ old('lokasi') }}"
-                        maxlength="150"
+                        maxlength="1000"
                         class="w-full min-h-[44px] px-3.5 py-2 rounded-lg bg-desa-mist border-2 border-desa-border text-sm text-desa-dark focus:outline-none focus:ring-2 focus:ring-desa-action"
                         placeholder="Pilih titik di peta atau ketik alamat/lokasi"
                     />
@@ -249,11 +255,15 @@
                 mapStatus.textContent = 'Belum ada titik dipilih.';
             }
 
-            map.on('click', (event) => {
+            let latestLookup = 0;
+            let lastLookupStartedAt = 0;
+
+            map.on('click', async (event) => {
                 const { lat, lng } = event.latlng;
                 const coordinates = `Lat: ${lat.toFixed(6)}, Lng: ${lng.toFixed(6)}`;
+                const lookupId = ++latestLookup;
 
-                locationInput.value = coordinates;
+                locationInput.value = 'Mencari alamat...';
                 locationInput.dispatchEvent(new Event('input', { bubbles: true }));
 
                 if (marker) {
@@ -262,7 +272,64 @@
                     marker = L.marker(event.latlng).addTo(map);
                 }
 
-                mapStatus.textContent = `Titik terpilih: ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+                mapStatus.textContent = `Mencari alamat untuk titik ${lat.toFixed(6)}, ${lng.toFixed(6)}...`;
+
+                try {
+                    const waitMs = Math.max(0, 1000 - (Date.now() - lastLookupStartedAt));
+                    if (waitMs > 0) {
+                        await new Promise((resolve) => window.setTimeout(resolve, waitMs));
+                    }
+
+                    if (lookupId !== latestLookup) {
+                        return;
+                    }
+
+                    const params = new URLSearchParams({
+                        format: 'json',
+                        lat: String(lat),
+                        lon: String(lng),
+                    });
+
+                    lastLookupStartedAt = Date.now();
+                    const response = await fetch(
+                        `https://nominatim.openstreetmap.org/reverse?${params.toString()}`,
+                        {
+                            headers: {
+                                Accept: 'application/json',
+                            },
+                        }
+                    );
+
+                    if (!response.ok) {
+                        throw new Error(`Layanan alamat mengembalikan status ${response.status}.`);
+                    }
+
+                    const result = await response.json();
+                    if (lookupId !== latestLookup) {
+                        return;
+                    }
+
+                    const address = typeof result.display_name === 'string'
+                        ? result.display_name.trim()
+                        : '';
+
+                    locationInput.value = address
+                        ? `${coordinates} - ${address}`.slice(0, 1000)
+                        : coordinates;
+                    mapStatus.textContent = address
+                        ? `Titik terpilih: ${coordinates}`
+                        : `Alamat tidak ditemukan. Titik terpilih: ${coordinates}`;
+                } catch (error) {
+                    if (lookupId !== latestLookup) {
+                        return;
+                    }
+
+                    locationInput.value = coordinates;
+                    mapStatus.textContent = `Alamat tidak dapat dimuat. Koordinat tetap digunakan: ${coordinates}`;
+                    console.error('Reverse geocoding lokasi pengaduan gagal.', error);
+                }
+
+                locationInput.dispatchEvent(new Event('input', { bubbles: true }));
             });
 
             window.setTimeout(() => map.invalidateSize(), 0);

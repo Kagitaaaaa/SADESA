@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Public\VerifikasiSuratController;
+use App\Http\Controllers\Public\PengaduanPublicController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -48,14 +49,9 @@ Route::prefix('informasi')->name('informasi.')->group(function () {
 
 // Form Pengaduan Warga Publik & Cek Tiket Aduan
 Route::prefix('pengaduan')->name('pengaduan.')->group(function () {
-    Route::get('/', function () {
-        return view('public.pengaduan.create');
-    })->name('index');
-    Route::post('/kirim', function () { /* Store Pengaduan */
-    })->name('store');
-    Route::get('/lacak', function () {
-        return view('public.pengaduan.lacak');
-    })->name('lacak');
+    Route::get('/', [PengaduanPublicController::class, 'create'])->name('index');
+    Route::post('/kirim', [PengaduanPublicController::class, 'store'])->name('store');
+    Route::get('/lacak', [PengaduanPublicController::class, 'lacak'])->name('lacak');
 });
 
 // Modul Panduan & Tutorial Penggunaan Sistem

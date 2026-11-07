@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\KartuKeluargaController;
 use App\Http\Controllers\Admin\WargaController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\PengaduanAdminController;
 use App\Http\Middleware\PeranDiizinkan;
 
 /*
@@ -63,12 +64,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
 
     // 3. Modul Tanggapan Pengaduan (Anggota 3)
     Route::prefix('pengaduan')->name('pengaduan.')->group(function () {
-        Route::get('/', function () {
-            return view('admin.pengaduan.index');
-        })->name('index');
-        Route::get('/{id}/tanggapi', function ($id) {
-            return view('admin.pengaduan.tanggapi', compact('id'));
-        })->name('tanggapi');
+        Route::get('/', [PengaduanAdminController::class, 'index'])->name('index');
+        Route::get('/{id}/tanggapi', [PengaduanAdminController::class, 'show'])->name('tanggapi');
+        Route::post('/{id}/tanggapi', [PengaduanAdminController::class, 'tanggapi'])->name('tanggapi.store');
+        Route::put('/{id}/status', [PengaduanAdminController::class, 'updateStatus'])->name('status.update');
     });
 
     // 4. Modul Publikasi Berita, Agenda & Galeri (Anggota 4)

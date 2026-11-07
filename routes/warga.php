@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Warga\PengaduanWargaController;
 use App\Http\Controllers\Warga\SuratController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,9 +27,7 @@ Route::prefix('warga')->name('warga.')->middleware(['auth'])->group(function () 
 
     // Riwayat Pengaduan Saya
     Route::prefix('pengaduan')->name('pengaduan.')->group(function () {
-        Route::get('/', function () {
-            return view('warga.pengaduan.index');
-        })->name('index');
+        Route::get('/', [PengaduanWargaController::class, 'index'])->name('index');
     });
 
     // Profil Biodata Warga & Anggota Keluarga

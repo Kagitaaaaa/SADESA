@@ -10,7 +10,15 @@ class PengaduanWargaController extends Controller
 {
     public function index()
     {
-        $wargaId = Auth::user()->warga_id ?? null;
+        $user = Auth::user();
+
+        abort_unless(
+            $user?->isWarga() && $user->warga_id,
+            403,
+            'Riwayat pengaduan hanya dapat diakses oleh akun warga yang terhubung dengan data warga.'
+        );
+
+        $wargaId = $user->warga_id;
         $pengaduans = Pengaduan::where('warga_id', $wargaId)
             ->latest()
             ->paginate(10);

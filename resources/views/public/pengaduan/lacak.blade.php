@@ -1,12 +1,17 @@
 <x-app-layout :title="'Lacak Pengaduan'" activeNav="pengaduan">
     <x-section-wrapper bgVariant="mist">
-        <div class="mx-auto max-w-3xl space-y-6">
-            <div>
-                <span class="inline-block px-3 py-1 rounded-md bg-desa-soft text-desa-dark border border-desa-border text-xs font-bold mb-2">
-                    Pemantauan Pengaduan
-                </span>
-                <h1 class="text-2xl sm:text-3xl font-extrabold text-desa-dark tracking-tight">Lacak Status Pengaduan</h1>
-                <p class="text-sm text-desa-muted mt-2">Masukkan kode tiket yang Anda terima setelah mengirim pengaduan.</p>
+        <div class="space-y-6">
+            <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+                <div>
+                    <span class="inline-block px-3 py-1 rounded-md bg-desa-soft text-desa-dark border border-desa-border text-xs font-bold mb-2">
+                        Layanan Pengaduan Warga
+                    </span>
+                    <h1 class="text-2xl sm:text-3xl font-extrabold text-desa-dark tracking-tight">Lacak Status Pengaduan</h1>
+                    <p class="text-sm text-desa-muted mt-2">Masukkan kode tiket yang Anda terima setelah mengirim pengaduan.</p>
+                </div>
+                <x-button variant="secondary" href="{{ route('warga.pengaduan.index') }}">
+                    Lihat Riwayat Pengaduan Saya
+                </x-button>
             </div>
 
             @if (session('sukses'))
@@ -18,7 +23,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('pengaduan.lacak') }}" method="GET" class="bg-white rounded-2xl border-2 border-desa-border p-5 sm:p-7 shadow-xs">
+            <form action="{{ route('pengaduan.lacak') }}" method="GET" class="bg-white rounded-2xl border-2 border-desa-border p-6 sm:p-8 shadow-xs">
                 <label for="kode" class="block text-xs font-bold text-desa-dark mb-1">
                     Kode Tiket <span class="text-red-600">*</span>
                 </label>

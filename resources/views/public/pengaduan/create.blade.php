@@ -1,16 +1,21 @@
 <x-app-layout :title="'Kirim Pengaduan & Aspirasi'" activeNav="pengaduan">
     <x-section-wrapper bgVariant="mist">
-        <div class="mx-auto max-w-3xl space-y-6">
-            <div>
-                <span class="inline-block px-3 py-1 rounded-md bg-desa-soft text-desa-dark border border-desa-border text-xs font-bold mb-2">
-                    Layanan Pengaduan Warga
-                </span>
-                <h1 class="text-2xl sm:text-3xl font-extrabold text-desa-dark tracking-tight">
-                    Sampaikan Pengaduan &amp; Aspirasi
-                </h1>
-                <p class="text-sm text-desa-muted mt-2">
-                    Isi informasi dengan jelas agar Pemerintah Desa dapat menindaklanjuti laporan Anda. Setelah dikirim, simpan kode tiket untuk memantau status.
-                </p>
+        <div class="space-y-6">
+            <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+                <div class="max-w-3xl">
+                    <span class="inline-block px-3 py-1 rounded-md bg-desa-soft text-desa-dark border border-desa-border text-xs font-bold mb-2">
+                        Layanan Pengaduan Warga
+                    </span>
+                    <h1 class="text-2xl sm:text-3xl font-extrabold text-desa-dark tracking-tight">
+                        Sampaikan Pengaduan &amp; Aspirasi
+                    </h1>
+                    <p class="text-sm text-desa-muted mt-2">
+                        Isi informasi dengan jelas agar Pemerintah Desa dapat menindaklanjuti laporan Anda. Setelah dikirim, simpan kode tiket untuk memantau status.
+                    </p>
+                </div>
+                <x-button variant="secondary" href="{{ route('warga.pengaduan.index') }}">
+                    Lihat Riwayat Pengaduan Saya
+                </x-button>
             </div>
 
             @if (session('sukses'))
@@ -29,7 +34,7 @@
                 action="{{ route('pengaduan.store') }}"
                 method="POST"
                 enctype="multipart/form-data"
-                class="space-y-5 bg-white rounded-2xl border-2 border-desa-border p-5 sm:p-7 shadow-xs"
+                class="space-y-6 bg-white rounded-2xl border-2 border-desa-border p-6 sm:p-8 shadow-xs"
             >
                 @csrf
 
@@ -75,27 +80,24 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div>
-                        <label for="kategori" class="block text-xs font-bold text-desa-dark mb-1">
-                            Kategori <span class="text-red-600">*</span>
-                        </label>
-                        <select
-                            id="kategori"
-                            name="kategori"
-                            required
-                            class="w-full min-h-[44px] px-3.5 py-2 rounded-lg bg-desa-mist border-2 border-desa-border text-sm text-desa-dark focus:outline-none focus:ring-2 focus:ring-desa-action"
-                        >
-                            <option value="">Pilih kategori</option>
-                            @foreach (['Pelayanan', 'Infrastruktur', 'Keamanan', 'Bansos', 'Lingkungan', 'Lainnya'] as $kategori)
-                                <option value="{{ $kategori }}" @selected(old('kategori') === $kategori)>{{ $kategori }}</option>
-                            @endforeach
-                        </select>
-                        @error('kategori')
-                            <p class="text-xs font-bold text-red-600 mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
+                <div>
+                    <label for="kategori" class="block text-xs font-bold text-desa-dark mb-1">
+                        Kategori <span class="text-red-600">*</span>
+                    </label>
+                    <select
+                        id="kategori"
+                        name="kategori"
+                        required
+                        class="w-full min-h-[44px] px-3.5 py-2 rounded-lg bg-desa-mist border-2 border-desa-border text-sm text-desa-dark focus:outline-none focus:ring-2 focus:ring-desa-action"
+                    >
+                        <option value="">Pilih kategori</option>
+                        @foreach (['Pelayanan', 'Infrastruktur', 'Keamanan', 'Bansos', 'Lingkungan', 'Lainnya'] as $kategori)
+                            <option value="{{ $kategori }}" @selected(old('kategori') === $kategori)>{{ $kategori }}</option>
+                        @endforeach
+                    </select>
+                    @error('kategori')
+                        <p class="text-xs font-bold text-red-600 mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div>

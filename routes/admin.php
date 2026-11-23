@@ -11,6 +11,8 @@ use App\Http\Controllers\Admin\WargaController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\PengaduanAdminController;
 use App\Http\Middleware\PeranDiizinkan;
+use App\Http\Controllers\Admin\ProfilDesaController;
+use App\Http\Controllers\Admin\AparaturController;
 
 /*
 |--------------------------------------------------------------------------
@@ -107,14 +109,24 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
             });
         });
 
-    // 5. Modul Profil Desa & Aparatur (Anggota 5)
-    Route::prefix('profil-desa')->name('profil.')->group(function () {
-        Route::get('/pengaturan', function () {
-            return view('admin.profil.edit');
-        })->name('edit');
-        Route::get('/aparatur', function () {
-            return view('admin.profil.aparatur');
-        })->name('aparatur.index');
+        // 5. Modul Profil Desa & Aparatur (Anggota 5: Muhammad Ramdhani - K3524080)
+            Route::prefix('profil-desa')
+                ->name('profil.')
+                ->middleware(PeranDiizinkan::class.':admin,kades')
+                ->group(function () {
+                Route::get('/pengaturan', [ProfilDesaController::class, 'edit'])->name('edit');
+                Route::put('/pengaturan', [ProfilDesaController::class, 'update'])->name('update');
+            Route::prefix('aparatur')->name('aparatur.')->group(function () {
+                Route::get('/', [AparaturController::class, 'index'])->name('index');
+                Route::post('/', [AparaturController::class, 'store'])->name('store');
+                Route::put('/{id}', [AparaturController::class, 'update'])->name('update');
+                Route::delete('/{id}', [AparaturController::class, 'destroy'])->name('destroy');
+            });
+        });
+
+
+        // Struktur Aparatur Desa
+        Route::get('/aparatur', [ProfilDesaController::class, 'aparatur'])->name('aparatur.index');
     });
 
     // Profil Akun Pengguna Administrator / Aparatur
@@ -127,4 +139,3 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
             return view('admin.panduan.index');
         })->name('index');
     });
-});

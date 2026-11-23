@@ -35,7 +35,7 @@ class DatabaseSeeder extends Seeder
             'nama_kepala_desa' => 'Sujatno, S.Sos.',
             'nip_kepala_desa' => '19750512 200212 1 003',
             'sambutan_kades' => 'Selamat datang di Sistem Administrasi dan Informasi Desa (SADESA) Pemerintah Desa Pabelan. Layanan ini hadir untuk memberikan kemudahan pelayanan persuratan dan keterbukaan informasi bagi seluruh warga desa.',
-            'sejarah' => 'Desa Pabelan terletak di Kecamatan Kartasura, Kabupaten Sukoharjo dan berkembang sebagai pusat pendidikan, perdagangan, serta pemukiman masyarakat yang dinamis.',
+            'sejarah' => "Desa Pabelan terletak di Kecamatan Kartasura, Kabupaten Sukoharjo dan berkembang sebagai pusat pendidikan, perdagangan, serta pemukiman masyarakat yang dinamis.\n\nSeiring perkembangan kawasan Kartasura sebagai jalur penghubung Surakarta dan sekitarnya, Desa Pabelan tumbuh menjadi wilayah dengan beragam kegiatan ekonomi dan layanan pendidikan.\n\nKini pemerintah desa terus berbenah melalui pelayanan publik berbasis digital agar warga lebih mudah memperoleh layanan administrasi.",
             'visi' => 'Terwujudnya tata kelola pemerintahan Desa Pabelan yang transparan, akuntabel, dan pelayanan masyarakat berbasis digital menuju desa yang mandiri dan sejahtera.',
             'misi' => "1. Meningkatkan pelayanan publik yang cepat, mudah, dan transparan.\n2. Mengembangkan sarana prasarana desa berbasis kebutuhan masyarakat.\n3. Memberdayakan ekonomi warga dan UMKM desa.",
             'gambaran_wilayah' => 'Desa Pabelan terletak di jalur strategis Kecamatan Kartasura, Kabupaten Sukoharjo.',
@@ -44,7 +44,7 @@ class DatabaseSeeder extends Seeder
             'batas_timur' => 'Kota Surakarta',
             'batas_barat' => 'Desa Gumpang',
             'luas_wilayah' => '218,4 Hektar',
-            'peta_embed' => '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15820.4!2d110.76!3d-7.55!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a145!2sPabelan!5e0!3m2!1sid!2sid!4v1700000000000" width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"></iframe>',
+            'peta_embed' => 'https://www.google.com/maps?q=Pabelan,+Kartasura,+Sukoharjo&output=embed',
         ]);
 
         // 2. Aparatur Pemerintahan Desa
@@ -67,6 +67,27 @@ class DatabaseSeeder extends Seeder
             'urutan' => 2,
             'status_aktif' => true,
         ]);
+
+                $aparaturTambahan = [
+            ['Siti Nurhaliza, S.E.', 'Kepala Seksi Pemerintahan', 'S1 Ekonomi', '141/09/SK/2021', 'Melaksanakan manajemen tata praja pemerintahan, menyusun rancangan regulasi desa, serta pembinaan ketenteraman dan ketertiban.', 3],
+            ['Agus Prasetyo, S.Pd.', 'Kepala Seksi Kesejahteraan', 'S1 Pendidikan', '141/10/SK/2021', 'Melaksanakan pembangunan sarana prasarana perdesaan, pemberdayaan masyarakat, serta pelayanan sosial dan kesehatan.', 4],
+            ['Dwi Lestari', 'Kepala Seksi Pelayanan', 'SMA/Sederajat', '141/11/SK/2021', 'Melaksanakan penyuluhan dan pelayanan masyarakat, serta memfasilitasi pelayanan administrasi kependudukan.', 5],
+            ['Rina Kusumawati, S.E.', 'Kepala Urusan Keuangan', 'S1 Akuntansi', '141/12/SK/2021', 'Melaksanakan pengelolaan keuangan desa, meliputi penatausahaan, pembukuan, dan pelaporan realisasi anggaran.', 6],
+            ['Eko Wahyudi', 'Kepala Urusan Tata Usaha dan Umum', 'D3 Administrasi', '141/13/SK/2021', 'Melaksanakan ketatausahaan, penataan administrasi surat-menyurat, arsip, serta pengelolaan inventaris kantor desa.', 7],
+            ['Slamet Riyadi', 'Kepala Dusun I', 'SMA/Sederajat', '141/14/SK/2021', 'Membantu kepala desa dalam melaksanakan tugas pada wilayah dusun, termasuk pembinaan RT/RW dan pendataan warga.', 8],
+            ['Joko Susilo', 'Kepala Dusun II', 'SMA/Sederajat', '141/15/SK/2021', 'Membantu kepala desa dalam melaksanakan tugas pada wilayah dusun, termasuk pembinaan RT/RW dan pendataan warga.', 9],
+        ];
+
+        foreach ($aparaturTambahan as [$nama, $jabatan, $pendidikan, $sk, $tupoksi, $urutan]) {
+            Aparatur::firstOrCreate(['nama' => $nama], [
+                'jabatan' => $jabatan,
+                'pendidikan_terakhir' => $pendidikan,
+                'no_sk' => $sk,
+                'tupoksi' => $tupoksi,
+                'urutan' => $urutan,
+                'status_aktif' => true,
+            ]);
+        }
 
         // 3. Master Kartu Keluarga & Warga
         $kk = KartuKeluarga::firstOrCreate(['no_kk' => '3311121505080001'], [

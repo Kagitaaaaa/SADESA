@@ -234,7 +234,7 @@
                         </div>
 
                         <a
-                            href="{{ route('admin.panduan.index') }}"
+                            href="{{ route('panduan.index') }}"
                             class="px-3 xl:px-3.5 py-2 min-h-[44px] inline-flex items-center rounded-lg text-sm font-bold transition-colors {{ $activeNav === 'panduan' ? 'text-desa-action font-extrabold underline decoration-2 underline-offset-8' : 'text-desa-dark hover:text-desa-action' }}"
                         >
                             Panduan
@@ -482,7 +482,7 @@
                     <a href="{{ route('admin.profil.edit') }}" class="flex items-center min-h-[44px] px-3 py-2 rounded-lg text-sm font-semibold {{ in_array($activeNav, ['profil-desa', 'aparatur']) ? 'bg-desa-action text-white' : 'text-desa-dark hover:bg-desa-bright' }}">
                         Profil &amp; Aparatur Desa
                     </a>
-                    <a href="{{ route('admin.panduan.index') }}" class="flex items-center min-h-[44px] px-3 py-2 rounded-lg text-sm font-semibold {{ $activeNav === 'panduan' ? 'bg-desa-action text-white' : 'text-desa-dark hover:bg-desa-bright' }}">
+                    <a href="{{ route('panduan.index') }}" class="flex items-center min-h-[44px] px-3 py-2 rounded-lg text-sm font-semibold {{ $activeNav === 'panduan' ? 'bg-desa-action text-white' : 'text-desa-dark hover:bg-desa-bright' }}">
                         Panduan Layanan
                     </a>
 

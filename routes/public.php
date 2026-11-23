@@ -3,6 +3,7 @@
 use App\Http\Controllers\Public\InformasiController;
 use App\Http\Controllers\Public\VerifikasiSuratController;
 use App\Http\Controllers\Public\PengaduanPublicController;
+use App\Http\Controllers\Public\ProfilPublicController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,20 +17,12 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-// Halaman Profil Desa & Aparatur (About Desa)
+// Halaman Profil Desa & Aparatur (About Desa) - Anggota 5: Muhammad Ramdhani - K3524080
 Route::prefix('profil')->name('profil.')->group(function () {
-    Route::get('/sejarah', function () {
-        return view('public.about.sejarah');
-    })->name('sejarah');
-    Route::get('/visi-misi', function () {
-        return view('public.about.visi-misi');
-    })->name('visi-misi');
-    Route::get('/struktur-aparatur', function () {
-        return view('public.about.aparatur');
-    })->name('aparatur');
-    Route::get('/wilayah', function () {
-        return view('public.about.wilayah');
-    })->name('wilayah');
+    Route::get('/sejarah', [ProfilPublicController::class, 'sejarah'])->name('sejarah');
+    Route::get('/visi-misi', [ProfilPublicController::class, 'visiMisi'])->name('visi-misi');
+    Route::get('/struktur-aparatur', [ProfilPublicController::class, 'aparatur'])->name('aparatur');
+    Route::get('/wilayah', [ProfilPublicController::class, 'wilayah'])->name('wilayah');
 });
 
 // Halaman Informasi, Berita & Dokumentasi

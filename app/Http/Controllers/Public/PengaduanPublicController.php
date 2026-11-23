@@ -30,9 +30,11 @@ class PengaduanPublicController extends Controller
 
     public function store(Request $request)
     {
+        $isAnonim = $request->boolean('is_anonim');
+
         $data = $request->validate([
-            'nama_pelapor' => ['required', 'string', 'max:100'],
-            'no_hp' => ['required', 'string', 'max:25'],
+            'nama_pelapor' => [$isAnonim ? 'nullable' : 'required', 'string', 'max:100'],
+            'no_hp' => [$isAnonim ? 'nullable' : 'required', 'string', 'max:25'],
             'kategori' => ['required', 'string', Rule::in(self::KATEGORI)],
             'judul_pengaduan' => ['required', 'string', 'max:150'],
             'isi_pengaduan' => ['required', 'string'],
@@ -40,8 +42,8 @@ class PengaduanPublicController extends Controller
             'foto_bukti' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'is_anonim' => ['sometimes', 'boolean'],
         ], [
-            'nama_pelapor.required' => 'Nama pelapor wajib diisi.',
-            'no_hp.required' => 'Nomor HP wajib diisi.',
+            'nama_pelapor.required' => 'Nama pelapor wajib diisi jika tidak memilih pengaduan anonim.',
+            'no_hp.required' => 'Nomor HP wajib diisi jika tidak memilih pengaduan anonim.',
             'kategori.required' => 'Silakan pilih kategori pengaduan.',
             'kategori.in' => 'Kategori pengaduan yang dipilih tidak tersedia.',
             'judul_pengaduan.required' => 'Judul pengaduan wajib diisi.',
@@ -73,7 +75,7 @@ class PengaduanPublicController extends Controller
                 }
             }
 
-            $pengaduan = DB::transaction(function () use ($data, $fotoBukti, $wargaId) {
+            $pengaduan = DB::transaction(function () use ($data, $fotoBukti, $wargaId, $isAnonim) {
                 $prefix = 'ADU-'.now()->format('Ym');
                 $nomorBerikutnya = Pengaduan::query()
                     ->where('kode_pengaduan', 'like', $prefix.'-%')
@@ -88,15 +90,15 @@ class PengaduanPublicController extends Controller
                 return Pengaduan::create([
                     'kode_pengaduan' => $kodeTiket,
                     'warga_id' => $wargaId,
-                    'nama_pelapor' => $data['nama_pelapor'],
-                    'no_hp' => $data['no_hp'],
+                    'nama_pelapor' => $isAnonim ? 'Pelapor Anonim' : $data['nama_pelapor'],
+                    'no_hp' => $isAnonim ? '-' : $data['no_hp'],
                     'kategori' => $data['kategori'],
                     'judul_pengaduan' => $data['judul_pengaduan'],
                     'isi_pengaduan' => $data['isi_pengaduan'],
                     'lokasi' => $data['lokasi'] ?? null,
                     'foto_bukti' => $fotoBukti,
                     'status' => 'menunggu',
-                    'is_anonim' => $data['is_anonim'] ?? false,
+                    'is_anonim' => $isAnonim,
                 ]);
             });
         } catch (Throwable $exception) {

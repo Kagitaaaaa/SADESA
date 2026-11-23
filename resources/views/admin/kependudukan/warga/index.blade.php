@@ -1,3 +1,7 @@
+@php
+    $bolehKelola = auth()->check() && auth()->user()->role === 'admin';
+@endphp
+
 <x-admin-layout title="Data Warga" activeMenu="warga">
     <div class="space-y-5">
         @include('admin.kependudukan._tab', ['aktif' => 'warga'])
@@ -35,9 +39,11 @@
                 @endif
             </form>
 
-            <x-button variant="primary" href="{{ route('admin.kependudukan.warga.create') }}">
-                + Tambah Warga
-            </x-button>
+            @if ($bolehKelola)
+                <x-button variant="primary" href="{{ route('admin.kependudukan.warga.create') }}">
+                    + Tambah Warga
+                </x-button>
+            @endif
         </div>
 
         @if ($wargas->isEmpty())
@@ -45,8 +51,8 @@
                 type="empty"
                 title="Data warga tidak ditemukan"
                 message="Belum ada data, atau kata kunci dan filter belum cocok."
-                actionLabel="Tambah Warga Baru"
-                :actionHref="route('admin.kependudukan.warga.create')"
+                :actionLabel="$bolehKelola ? 'Tambah Warga Baru' : null"
+                :actionHref="$bolehKelola ? route('admin.kependudukan.warga.create') : null"
             />
         @else
             <div class="bg-white rounded-2xl border-2 border-desa-border overflow-hidden shadow-xs">
@@ -60,7 +66,9 @@
                                 <th class="py-3.5 px-4">L/P</th>
                                 <th class="py-3.5 px-4">Kartu Keluarga</th>
                                 <th class="py-3.5 px-4">Status</th>
-                                <th class="py-3.5 px-4 text-right">Aksi</th>
+                                @if ($bolehKelola)
+                                    <th class="py-3.5 px-4 text-right">Aksi</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-blue-200 text-sm">
@@ -91,30 +99,32 @@
                                             {{ $w->status_warga }}
                                         </span>
                                     </td>
-                                    <td class="py-3.5 px-4">
-                                        <div class="flex justify-end gap-2">
-                                            <a
-                                                href="{{ route('admin.kependudukan.warga.edit', $w) }}"
-                                                class="min-h-[44px] inline-flex items-center px-3 py-1.5 rounded-lg bg-desa-soft text-desa-dark border border-desa-border text-xs font-bold hover:bg-desa-bright"
-                                            >
-                                                Ubah
-                                            </a>
-                                            <form
-                                                method="POST"
-                                                action="{{ route('admin.kependudukan.warga.destroy', $w) }}"
-                                                onsubmit="return confirm('Hapus data warga {{ e($w->nama_lengkap) }}? Tindakan ini tidak bisa dibatalkan.')"
-                                            >
-                                                @csrf
-                                                @method('DELETE')
-                                                <button
-                                                    type="submit"
-                                                    class="min-h-[44px] px-3 py-1.5 rounded-lg bg-red-100 text-red-950 border border-red-700 text-xs font-bold hover:bg-red-200"
+                                    @if ($bolehKelola)
+                                        <td class="py-3.5 px-4">
+                                            <div class="flex justify-end gap-2">
+                                                <a
+                                                    href="{{ route('admin.kependudukan.warga.edit', $w) }}"
+                                                    class="min-h-[44px] inline-flex items-center px-3 py-1.5 rounded-lg bg-desa-soft text-desa-dark border border-desa-border text-xs font-bold hover:bg-desa-bright"
                                                 >
-                                                    Hapus
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
+                                                    Ubah
+                                                </a>
+                                                <form
+                                                    method="POST"
+                                                    action="{{ route('admin.kependudukan.warga.destroy', $w) }}"
+                                                    onsubmit="return confirm('Hapus data warga {{ e($w->nama_lengkap) }}? Tindakan ini tidak bisa dibatalkan.')"
+                                                >
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button
+                                                        type="submit"
+                                                        class="min-h-[44px] px-3 py-1.5 rounded-lg bg-red-100 text-red-950 border border-red-700 text-xs font-bold hover:bg-red-200 cursor-pointer"
+                                                    >
+                                                        Hapus
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>

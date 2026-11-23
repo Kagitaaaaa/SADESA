@@ -3,9 +3,6 @@
         <div class="max-w-md mx-auto bg-white rounded-2xl border-2 border-desa-border p-6 sm:p-8 space-y-5">
             <div>
                 <h1 class="text-2xl font-extrabold text-desa-dark tracking-tight">Masuk ke SADESA</h1>
-                <p class="text-sm text-desa-muted mt-1">
-                    Gunakan akun yang terdaftar di Pemerintah Desa Pabelan.
-                </p>
             </div>
 
             <form method="POST" action="{{ route('login.store') }}" class="space-y-4">

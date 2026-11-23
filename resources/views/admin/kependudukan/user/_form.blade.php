@@ -14,16 +14,13 @@
         [
             'nama' => 'role', 'label' => 'Peran', 'tipe' => 'select', 'wajib' => true,
             'opsi' => \App\Models\User::PERAN, 'bawaan' => 'warga',
-            'petunjuk' => $akunSendiri ? 'Anda sedang mengubah akun sendiri, jadi peran tidak dapat diganti.' : null,
         ],
         [
             'nama' => 'warga_id', 'label' => 'Terhubung ke Data Warga', 'tipe' => 'select', 'wajib' => false,
             'opsi' => $opsiWarga,
-            'petunjuk' => 'Wajib dipilih untuk peran Warga. Untuk aparatur boleh dikosongkan.',
         ],
         [
             'nama' => 'password', 'label' => 'Kata Sandi', 'tipe' => 'password', 'wajib' => $baru,
-            'petunjuk' => $baru ? 'Minimal 8 karakter.' : 'Kosongkan jika tidak ingin mengganti kata sandi.',
         ],
         ['nama' => 'password_confirmation', 'label' => 'Ulangi Kata Sandi', 'tipe' => 'password', 'wajib' => $baru],
     ];
@@ -32,7 +29,6 @@
 <div class="grid gap-4 sm:grid-cols-2">
     @foreach ($bidang as $b)
         @php
-            // Kata sandi tidak pernah diisi ulang ke form.
             $nilai = $b['tipe'] === 'password'
                 ? null
                 : old($b['nama'], $akun?->{$b['nama']} ?? ($b['bawaan'] ?? null));
@@ -69,10 +65,6 @@
                     class="{{ $kelasInput }}"
                     placeholder="{{ $b['contoh'] ?? '' }}"
                 />
-            @endif
-
-            @if (! empty($b['petunjuk']))
-                <p class="text-xs text-desa-muted mt-1">{{ $b['petunjuk'] }}</p>
             @endif
 
             @error($b['nama'])

@@ -91,6 +91,10 @@
             outline: 3px solid #1D4ED8;
             outline-offset: 2px;
         }
+        .leaflet-container {
+            isolation: isolate;
+            z-index: 0 !important;
+        }
     </style>
 </head>
 <body class="bg-desa-mist text-desa-dark font-sans min-h-screen flex flex-col antialiased selection:bg-desa-bright selection:text-desa-dark">
@@ -120,7 +124,6 @@
 
                 <nav class="hidden lg:flex items-center justify-center gap-1.5 xl:gap-3" aria-label="Navigasi Utama">
                     @if (auth()->check() && auth()->user()->isAdmin())
-                        {{-- Navigasi Terpadu Khusus Administrator & Aparatur Desa (Tanpa Beranda agar Rapi, Lega & Simetris) --}}
                         <div class="relative" data-nav-dropdown>
                             <button
                                 type="button"
@@ -136,7 +139,7 @@
                             </button>
                             <div data-dropdown-menu class="hidden absolute left-0 mt-1 w-64 rounded-xl bg-white border-2 border-desa-border shadow-lg py-2 z-50">
                                 <a href="{{ route('admin.kependudukan.kk.index') }}" class="flex items-center min-h-[44px] px-4 py-2 text-sm font-semibold text-desa-dark hover:bg-desa-soft">
-                                    KK (Kartu Keluarga)
+                                    Kartu Keluarga
                                 </a>
                                 <a href="{{ route('admin.kependudukan.warga.index') }}" class="flex items-center min-h-[44px] px-4 py-2 text-sm font-semibold text-desa-dark hover:bg-desa-soft">
                                     Data Warga
@@ -168,7 +171,7 @@
                                 </a>
                                 @if (auth()->user()->role === 'admin')
                                     <a href="{{ route('admin.surat.jenis') }}" class="flex items-center min-h-[44px] px-4 py-2 text-sm font-semibold text-desa-dark hover:bg-desa-soft">
-                                        Master 14 Jenis Surat
+                                        Penambahan Jenis Surat
                                     </a>
                                 @endif
                             </div>
@@ -237,7 +240,6 @@
                             Panduan
                         </a>
                     @else
-                        {{-- Navigasi Publik & Portal Warga --}}
                         <a
                             href="{{ route('home') }}"
                             class="px-3 py-2 min-h-[44px] inline-flex items-center rounded-lg text-sm font-bold transition-colors {{ $activeNav === 'beranda' ? 'text-desa-action underline decoration-2 underline-offset-8' : 'text-desa-dark hover:text-desa-action' }}"
@@ -373,7 +375,6 @@
 
                 <div class="flex items-center gap-2">
                     @auth
-                        {{-- Menu Akun Minimalis Berbasis Ikon (Berlaku Global untuk Semua Halaman & Role) --}}
                         <div class="relative" data-nav-dropdown>
                             <button
                                 type="button"
@@ -422,7 +423,7 @@
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                                             </svg>
-                                            <span>Keluar (Logout)</span>
+                                            <span>Keluar</span>
                                         </button>
                                     </form>
                                 @endif
@@ -464,14 +465,19 @@
                     <a href="{{ route('admin.kependudukan.kk.index') }}" class="flex items-center min-h-[44px] px-3 py-2 rounded-lg text-sm font-semibold {{ in_array($activeNav, ['kependudukan', 'kk', 'warga', 'user']) ? 'bg-desa-action text-white' : 'text-desa-dark hover:bg-desa-bright' }}">
                         {{ auth()->user()->role === 'kades' ? 'Data Kependudukan' : 'Kependudukan & Akun Pengguna' }}
                     </a>
-                    <a href="{{ route('admin.surat.index') }}" class="flex items-center min-h-[44px] px-3 py-2 rounded-lg text-sm font-semibold {{ in_array($activeNav, ['surat', 'jenis-surat']) ? 'bg-desa-action text-white' : 'text-desa-dark hover:bg-desa-bright' }}">
+                    <a href="{{ route('admin.surat.index') }}" class="flex items-center min-h-[44px] px-3 py-2 rounded-lg text-sm font-semibold {{ $activeNav === 'surat' ? 'bg-desa-action text-white' : 'text-desa-dark hover:bg-desa-bright' }}">
                         {{ auth()->user()->role === 'kades' ? 'Pengesahan E-Surat Kades' : 'Layanan E-Surat Desa' }}
                     </a>
+                    @if (auth()->user()->role === 'admin')
+                        <a href="{{ route('admin.surat.jenis') }}" class="flex items-center min-h-[44px] px-3 py-2 rounded-lg text-sm font-semibold {{ $activeNav === 'jenis-surat' ? 'bg-desa-action text-white' : 'text-desa-dark hover:bg-desa-bright' }}">
+                            Penambahan Jenis Surat
+                        </a>
+                    @endif
                     <a href="{{ route('admin.pengaduan.index') }}" class="flex items-center min-h-[44px] px-3 py-2 rounded-lg text-sm font-semibold {{ $activeNav === 'pengaduan' ? 'bg-desa-action text-white' : 'text-desa-dark hover:bg-desa-bright' }}">
                         Pengaduan Warga
                     </a>
                     <a href="{{ route('admin.informasi.berita.index') }}" class="flex items-center min-h-[44px] px-3 py-2 rounded-lg text-sm font-semibold {{ in_array($activeNav, ['berita', 'agenda', 'galeri', 'informasi']) ? 'bg-desa-action text-white' : 'text-desa-dark hover:bg-desa-bright' }}">
-                        Informasi Desa (Berita &amp; Agenda)
+                        Informasi Desa
                     </a>
                     <a href="{{ route('admin.profil.edit') }}" class="flex items-center min-h-[44px] px-3 py-2 rounded-lg text-sm font-semibold {{ in_array($activeNav, ['profil-desa', 'aparatur']) ? 'bg-desa-action text-white' : 'text-desa-dark hover:bg-desa-bright' }}">
                         Profil &amp; Aparatur Desa
@@ -485,7 +491,7 @@
                         Beranda
                     </a>
                     <a href="{{ route('profil.sejarah') }}" class="flex items-center min-h-[44px] px-3 py-2 rounded-lg text-sm font-semibold {{ in_array($activeNav, ['profil-desa', 'sejarah', 'visi-misi', 'wilayah']) ? 'bg-desa-action text-white' : 'text-desa-dark hover:bg-desa-bright' }}">
-                        Profil Desa (Sejarah, Visi Misi, Aparatur &amp; Wilayah)
+                        Profil Desa
                     </a>
                     <a href="{{ route('informasi.berita.index') }}" class="flex items-center min-h-[44px] px-3 py-2 rounded-lg text-sm font-semibold {{ $activeNav === 'berita' ? 'bg-desa-action text-white' : 'text-desa-dark hover:bg-desa-bright' }}">
                         Berita &amp; Pengumuman Desa
@@ -599,22 +605,22 @@
                     </h2>
                     <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-1.5 text-sm font-semibold text-desa-dark">
                         <li>
-                            <a href="{{ route('warga.surat.index') }}" class="inline-flex items-center min-h-[44px] sm:min-h-[36px] hover:underline">
+                            <a href="{{ route('warga.surat.index') }}" class="inline-flex items-center min-h-[44px] hover:underline">
                                 Pengajuan Surat Pengantar
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('pengaduan.index') }}" class="inline-flex items-center min-h-[44px] sm:min-h-[36px] hover:underline">
-                                Buat Pengaduan & Aspirasi
+                            <a href="{{ route('pengaduan.index') }}" class="inline-flex items-center min-h-[44px] hover:underline">
+                                Buat Pengaduan &amp; Aspirasi
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('pengaduan.lacak') }}" class="inline-flex items-center min-h-[44px] sm:min-h-[36px] hover:underline">
+                            <a href="{{ route('pengaduan.lacak') }}" class="inline-flex items-center min-h-[44px] hover:underline">
                                 Lacak Tiket Pengaduan
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('profil.aparatur') }}" class="inline-flex items-center min-h-[44px] sm:min-h-[36px] hover:underline">
+                            <a href="{{ route('profil.aparatur') }}" class="inline-flex items-center min-h-[44px] hover:underline">
                                 Struktur Organisasi &amp; Aparatur
                             </a>
                         </li>

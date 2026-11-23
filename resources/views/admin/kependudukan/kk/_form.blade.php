@@ -1,7 +1,6 @@
 @php
     $kelasInput = 'w-full min-h-[44px] px-3.5 py-2 rounded-lg bg-desa-mist border-2 border-desa-border text-sm text-desa-dark focus:outline-none focus:ring-2 focus:ring-desa-action';
 
-    // nama kolom => [label, contoh isian, wajib?]
     $kolomAtas = [
         'no_kk' => ['Nomor Kartu Keluarga', '16 digit angka', true],
         'kepala_keluarga' => ['Nama Kepala Keluarga', 'Contoh: Budi Santoso', true],

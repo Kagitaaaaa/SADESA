@@ -12,27 +12,19 @@
     <x-section-wrapper bgVariant="mist">
         <div class="max-w-3xl mx-auto">
             <div class="bg-white rounded-2xl border-2 border-desa-border overflow-hidden shadow-xs">
-                <!-- Header Identitas Desa -->
                 <div class="bg-desa-dark text-white p-6 flex items-center gap-4 border-b-2 border-desa-border">
                     @if (file_exists(public_path('images/logo-desa-pabelan.png')))
                         <img src="{{ asset('images/logo-desa-pabelan.png') }}" alt="Lambang Desa {{ $namaDesa }}" class="w-14 h-14 object-contain shrink-0" />
                     @endif
                     <div>
-                        <span class="text-xs font-bold text-desa-bright block">
-                            Sistem Validasi Tanda Tangan Elektronik &bull; SADESA
-                        </span>
                         <h1 class="text-xl sm:text-2xl font-extrabold leading-tight">
                             Pemerintah Desa {{ $namaDesa }}, Kabupaten {{ $kabupaten }}
                         </h1>
-                        <p class="text-xs text-desa-soft mt-0.5">
-                            Pemeriksaan Keaslian Surat Keterangan / Pengantar Berdasarkan QR Code Token
-                        </p>
                     </div>
                 </div>
 
                 <div class="p-6 sm:p-8 space-y-6">
                     @if ($isValid)
-                        <!-- Badge Dokumen Sah & Terdaftar -->
                         <div class="rounded-2xl border-2 border-emerald-700 bg-emerald-50 p-5 text-emerald-950 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                             <div class="flex items-start gap-3.5">
                                 <div class="w-12 h-12 rounded-xl bg-emerald-700 text-white flex items-center justify-center shrink-0 font-extrabold text-xl">
@@ -45,14 +37,10 @@
                                     <h2 class="text-lg font-extrabold mt-1">
                                         Surat Resmi Terverifikasi di Basis Data Desa {{ $namaDesa }}
                                     </h2>
-                                    <p class="text-xs mt-0.5">
-                                        Dokumen ini benar diterbitkan dan disahkan secara resmi oleh Pemerintah Desa {{ $namaDesa }}.
-                                    </p>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Tabel Rincian Dokumen Terverifikasi -->
                         <div class="space-y-4">
                             <h3 class="text-base font-extrabold text-desa-dark pb-2 border-b-2 border-desa-soft">
                                 Rincian Dokumen Resmi
@@ -74,7 +62,7 @@
                                 </div>
 
                                 <div class="p-4 rounded-xl bg-desa-mist border border-desa-border">
-                                    <dt class="text-xs font-bold text-desa-muted">Nama Pemohon (Disensor Privasi)</dt>
+                                    <dt class="text-xs font-bold text-desa-muted">Nama Pemohon</dt>
                                     <dd class="font-extrabold text-desa-dark mt-1">
                                         {{ $surat->nama_warga_disensor }}
                                     </dd>
@@ -115,7 +103,6 @@
                             </dl>
                         </div>
                     @else
-                        <!-- Badge Dokumen Tidak Ditemukan / Belum Sah -->
                         <div class="rounded-2xl border-2 border-red-700 bg-red-50 p-6 text-red-950 space-y-2">
                             <span class="inline-block px-2.5 py-0.5 rounded bg-red-700 text-white text-xs font-extrabold">
                                 DOKUMEN TIDAK TERDAFTAR / TIDAK VALID
@@ -123,9 +110,6 @@
                             <h2 class="text-lg font-extrabold">
                                 Token QR Code Tidak Ditemukan atau Surat Belum Disahkan
                             </h2>
-                            <p class="text-xs leading-relaxed">
-                                Token <code class="font-mono bg-white px-1.5 py-0.5 rounded border border-red-400">{{ $token }}</code> tidak cocok dengan dokumen surat mana pun yang telah disetujui di Pemerintah Desa {{ $namaDesa }}. Pastikan QR Code yang dipindai berasal dari surat resmi Desa {{ $namaDesa }}.
-                            </p>
                         </div>
                     @endif
 

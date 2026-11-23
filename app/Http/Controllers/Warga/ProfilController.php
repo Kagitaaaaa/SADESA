@@ -12,9 +12,6 @@ use Illuminate\View\View;
 
 class ProfilController extends Controller
 {
-    /**
-     * Tampilkan halaman profil warga beserta biodata kependudukan terintegrasi.
-     */
     public function show(Request $request): View
     {
         $user = $request->user();
@@ -27,9 +24,6 @@ class ProfilController extends Controller
         return view('warga.profil', compact('user', 'warga', 'kartuKeluarga', 'anggotaKeluarga'));
     }
 
-    /**
-     * Perbarui data profil warga: foto profil, kontak handphone, email, dan kata sandi.
-     */
     public function update(Request $request): RedirectResponse
     {
         $user = $request->user();
@@ -53,7 +47,6 @@ class ProfilController extends Controller
             'password_baru.confirmed' => 'Konfirmasi kata sandi baru tidak cocok.',
         ]);
 
-        // 1. Unggah Foto Profil (Avatar)
         if ($request->hasFile('avatar')) {
             $avatarFile = $request->file('avatar');
             if ($avatarFile && $avatarFile->isValid()) {
@@ -62,7 +55,6 @@ class ProfilController extends Controller
                     File::makeDirectory($uploadDir, 0755, true, true);
                 }
 
-                // Hapus avatar lama jika ada
                 if ($user->avatar && File::exists(public_path($user->avatar))) {
                     @File::delete(public_path($user->avatar));
                 }
@@ -81,17 +73,14 @@ class ProfilController extends Controller
             $user->avatar = null;
         }
 
-        // 2. Perbarui Email
         $user->email = $request->email;
 
-        // 3. Perbarui Kata Sandi (opsional)
         if ($request->filled('password_baru')) {
             $user->password = Hash::make($request->password_baru);
         }
 
         $user->save();
 
-        // 4. Perbarui Nomor HP pada Data Warga bila akun terhubung
         if ($warga && $request->has('no_hp')) {
             $warga->update([
                 'no_hp' => $request->input('no_hp'),

@@ -22,4 +22,13 @@ class GaleriFoto extends Model
     {
         return $this->belongsTo(Galeri::class, 'galeri_id');
     }
+
+    public function getUrlAttribute(): ?string
+    {
+        if ($this->file_path && file_exists(public_path($this->file_path))) {
+            return asset($this->file_path);
+        }
+
+        return null;
+    }
 }

@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\AgendaAdminController;
+use App\Http\Controllers\Admin\GaleriAdminController;
+use App\Http\Controllers\Admin\InformasiAdminController;
 use App\Http\Controllers\Admin\JenisSuratController;
 use App\Http\Controllers\Admin\SuratPengantarController;
 use Illuminate\Support\Facades\Route;
@@ -22,20 +25,24 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     })->name('dashboard');
 
     // 1. Modul Kependudukan (Anggota 1)
-        // 1. Modul Kependudukan (Anggota 1)
-        // 1. Modul Kependudukan (Anggota 1)
     Route::prefix('kependudukan')
         ->name('kependudukan.')
         ->middleware(PeranDiizinkan::class.':admin,kades')
         ->group(function () {
             Route::resource('kartu-keluarga', KartuKeluargaController::class)
-                ->except(['show'])
+                ->only(['index'])
                 ->names('kk');
 
-            Route::resource('warga', WargaController::class)->except(['show']);
+            Route::resource('warga', WargaController::class)->only(['index']);
 
-            // Akun pengguna: khusus Administrator
+            // Perubahan KK, data warga, dan akun pengguna: khusus Administrator
             Route::middleware(PeranDiizinkan::class.':admin')->group(function () {
+                Route::resource('kartu-keluarga', KartuKeluargaController::class)
+                    ->except(['index', 'show'])
+                    ->names('kk');
+
+                Route::resource('warga', WargaController::class)->except(['index', 'show']);
+
                 Route::resource('pengguna', UserController::class)
                     ->parameters(['pengguna' => 'user'])
                     ->except(['show'])
@@ -47,11 +54,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::prefix('surat')->name('surat.')->middleware(['can:akses-surat-admin'])->group(function () {
         Route::get('/', [SuratPengantarController::class, 'index'])->name('index');
 
-        // CRUD Master Jenis Surat
-        Route::get('/master-jenis', [JenisSuratController::class, 'index'])->name('jenis');
-        Route::post('/master-jenis', [JenisSuratController::class, 'store'])->name('jenis.store');
-        Route::put('/master-jenis/{id}', [JenisSuratController::class, 'update'])->name('jenis.update');
-        Route::delete('/master-jenis/{id}', [JenisSuratController::class, 'destroy'])->name('jenis.destroy');
+        // Penambahan Jenis Surat
+        Route::redirect('/master-jenis', '/admin/surat/penambahan-jenis-surat');
+        Route::get('/penambahan-jenis-surat', [JenisSuratController::class, 'index'])->name('jenis');
+        Route::post('/penambahan-jenis-surat', [JenisSuratController::class, 'store'])->name('jenis.store');
+        Route::put('/penambahan-jenis-surat/{id}', [JenisSuratController::class, 'update'])->name('jenis.update');
+        Route::delete('/penambahan-jenis-surat/{id}', [JenisSuratController::class, 'destroy'])->name('jenis.destroy');
 
         // Verifikasi, Keputusan (ACC / Tolak), dan Cetak PDF A4
         Route::get('/{id}/proses', [SuratPengantarController::class, 'proses'])->name('proses');
@@ -71,17 +79,33 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     });
 
     // 4. Modul Publikasi Berita, Agenda & Galeri (Anggota 4)
-    Route::prefix('informasi')->name('informasi.')->group(function () {
-        Route::get('/berita', function () {
-            return view('admin.informasi.berita-index');
-        })->name('berita.index');
-        Route::get('/agenda', function () {
-            return view('admin.informasi.agenda-index');
-        })->name('agenda.index');
-        Route::get('/galeri', function () {
-            return view('admin.informasi.galeri-index');
-        })->name('galeri.index');
-    });
+    Route::prefix('informasi')
+        ->name('informasi.')
+        ->middleware(PeranDiizinkan::class.':admin,kades')
+        ->group(function () {
+            Route::prefix('berita')->name('berita.')->group(function () {
+                Route::get('/', [InformasiAdminController::class, 'index'])->name('index');
+                Route::post('/', [InformasiAdminController::class, 'store'])->name('store');
+                Route::put('/{id}', [InformasiAdminController::class, 'update'])->name('update');
+                Route::delete('/{id}', [InformasiAdminController::class, 'destroy'])->name('destroy');
+            });
+
+            Route::prefix('agenda')->name('agenda.')->group(function () {
+                Route::get('/', [AgendaAdminController::class, 'index'])->name('index');
+                Route::post('/', [AgendaAdminController::class, 'store'])->name('store');
+                Route::put('/{id}', [AgendaAdminController::class, 'update'])->name('update');
+                Route::delete('/{id}', [AgendaAdminController::class, 'destroy'])->name('destroy');
+            });
+
+            Route::prefix('galeri')->name('galeri.')->group(function () {
+                Route::get('/', [GaleriAdminController::class, 'index'])->name('index');
+                Route::post('/', [GaleriAdminController::class, 'store'])->name('store');
+                Route::put('/{id}', [GaleriAdminController::class, 'update'])->name('update');
+                Route::delete('/{id}', [GaleriAdminController::class, 'destroy'])->name('destroy');
+                Route::delete('/foto/{id}', [GaleriAdminController::class, 'destroyFoto'])->name('foto.destroy');
+                Route::put('/foto/{id}/sampul', [GaleriAdminController::class, 'jadikanSampul'])->name('foto.sampul');
+            });
+        });
 
     // 5. Modul Profil Desa & Aparatur (Anggota 5)
     Route::prefix('profil-desa')->name('profil.')->group(function () {

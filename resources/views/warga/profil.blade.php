@@ -1,23 +1,12 @@
 <x-app-layout :title="'Profil Saya - Layanan Mandiri Warga Desa Pabelan'" activeNav="profil-saya">
     <x-section-wrapper bgVariant="mist">
         <div class="space-y-6">
-            <!-- Header Kartu Profil -->
             <div class="bg-white rounded-2xl border-2 border-desa-border p-6 shadow-xs">
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-desa-soft text-desa-dark border border-desa-border mb-2">
-                    <svg class="w-3.5 h-3.5 text-desa-action" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                    <span>Portal Layanan Mandiri Warga • Desa Pabelan</span>
-                </span>
                 <h1 class="text-2xl sm:text-3xl font-extrabold text-desa-dark tracking-tight">
                     Profil Saya
                 </h1>
-                <p class="text-sm text-desa-muted mt-1">
-                    Kelola foto profil akun mandiri dan tinjau sinkronisasi data kependudukan resmi Anda di Pemerintah Desa Pabelan.
-                </p>
             </div>
 
-            <!-- Notifikasi Pesan Sukses / Error -->
             @if (session('sukses'))
                 <div class="p-4 rounded-xl bg-emerald-50 border-2 border-emerald-600 text-emerald-950 font-bold text-sm flex items-center gap-3">
                     <svg class="w-5 h-5 text-emerald-700 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -43,11 +32,8 @@
                 </div>
             @endif
 
-            <!-- Grid Konten Profil -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                <!-- Kolom Kiri: Foto Profil & Pengaturan Akun (lg:col-span-4) -->
                 <div class="lg:col-span-4 space-y-6">
-                    <!-- Kartu Foto Profil & Identitas Akun -->
                     <div class="bg-white rounded-2xl border-2 border-desa-border p-6 shadow-xs text-center">
                         <div class="relative inline-block mx-auto mb-4">
                             @if ($user->avatar && file_exists(public_path($user->avatar)))
@@ -101,7 +87,6 @@
                             @endif
                         </div>
 
-                        <!-- Form Ganti Foto Profil & Kontak -->
                         <form
                             action="{{ route('warga.profil.update') }}"
                             method="POST"
@@ -120,15 +105,12 @@
                                     id="avatar"
                                     name="avatar"
                                     accept="image/png, image/jpeg, image/jpg, image/webp"
-                                    class="w-full text-xs text-desa-dark file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-2 file:border-desa-border file:text-xs file:font-bold file:bg-desa-soft file:text-desa-dark hover:file:bg-desa-bright cursor-pointer"
+                                    class="w-full min-h-[44px] text-xs text-desa-dark file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-2 file:border-desa-border file:text-xs file:font-bold file:bg-desa-soft file:text-desa-dark hover:file:bg-desa-bright cursor-pointer"
                                 />
-                                <p class="text-[11px] text-desa-muted mt-1 leading-tight">
-                                    Format: JPG, JPEG, PNG, WEBP. Ukuran maksimal 2 MB.
-                                </p>
                             </div>
 
                             @if ($user->avatar && file_exists(public_path($user->avatar)))
-                                <div class="flex items-center gap-2 pt-1">
+                                <div class="flex items-center gap-2 min-h-[44px] pt-1">
                                     <input
                                         type="checkbox"
                                         id="hapus_avatar"
@@ -137,7 +119,7 @@
                                         class="w-4 h-4 rounded text-desa-action border-2 border-desa-border focus:ring-desa-action"
                                     />
                                     <label for="hapus_avatar" class="text-xs font-bold text-red-600 cursor-pointer">
-                                        Hapus foto profil saat ini (gunakan inisial)
+                                        Hapus foto profil saat ini
                                     </label>
                                 </div>
                             @endif
@@ -180,7 +162,6 @@
                         </form>
                     </div>
 
-                    <!-- Kartu Ubah Kata Sandi Akun -->
                     <div class="bg-white rounded-2xl border-2 border-desa-border p-6 shadow-xs">
                         <div class="flex items-center gap-2 mb-4">
                             <div class="w-9 h-9 rounded-lg bg-desa-soft border border-desa-border flex items-center justify-center text-desa-action shrink-0">
@@ -190,7 +171,6 @@
                             </div>
                             <div>
                                 <h3 class="text-sm font-extrabold text-desa-dark">Keamanan &amp; Kata Sandi</h3>
-                                <p class="text-[11px] text-desa-muted">Ganti kata sandi login mandiri Anda</p>
                             </div>
                         </div>
 
@@ -251,10 +231,8 @@
                     </div>
                 </div>
 
-                <!-- Kolom Kanan: Data Kependudukan Terintegrasi (lg:col-span-8) -->
                 <div class="lg:col-span-8 space-y-6">
                     @if ($warga)
-                        <!-- Kartu Biodata Warga Resmi -->
                         <div class="bg-white rounded-2xl border-2 border-desa-border p-6 shadow-xs">
                             <div class="flex flex-wrap items-center justify-between gap-3 border-b-2 border-desa-border/30 pb-4 mb-5">
                                 <div class="flex items-center gap-3">
@@ -265,11 +243,8 @@
                                     </div>
                                     <div>
                                         <h3 class="text-lg font-extrabold text-desa-dark">
-                                            Biodata Dasar Penduduk (KTP-el)
+                                            Biodata Dasar Penduduk
                                         </h3>
-                                        <p class="text-xs text-desa-muted">
-                                            Data sinkron langsung dengan Master Kependudukan Desa Pabelan.
-                                        </p>
                                     </div>
                                 </div>
                                 <span class="inline-flex px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-950 border border-emerald-700">
@@ -280,7 +255,7 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div class="p-3.5 rounded-xl bg-desa-mist border border-desa-border/50">
                                     <p class="text-[11px] font-bold text-desa-muted uppercase tracking-wider">
-                                        Nomor Induk Kependudukan (NIK)
+                                        Nomor Induk Kependudukan
                                     </p>
                                     <p class="text-base font-extrabold font-mono text-desa-dark mt-0.5">
                                         {{ $warga->nik }}
@@ -289,7 +264,7 @@
 
                                 <div class="p-3.5 rounded-xl bg-desa-mist border border-desa-border/50">
                                     <p class="text-[11px] font-bold text-desa-muted uppercase tracking-wider">
-                                        Nama Lengkap (Sesuai KTP-el)
+                                        Nama Lengkap
                                     </p>
                                     <p class="text-base font-extrabold text-desa-dark mt-0.5">
                                         {{ $warga->nama_lengkap }}
@@ -302,9 +277,6 @@
                                     </p>
                                     <p class="text-sm font-bold text-desa-dark mt-0.5">
                                         {{ $warga->tempat_lahir }}, {{ $warga->tanggal_lahir ? $warga->tanggal_lahir->translatedFormat('d F Y') : '-' }}
-                                        @if ($warga->tanggal_lahir)
-                                            <span class="text-xs font-normal text-desa-muted">({{ $warga->tanggal_lahir->age }} Tahun)</span>
-                                        @endif
                                     </p>
                                 </div>
 
@@ -355,7 +327,6 @@
                             </div>
                         </div>
 
-                        <!-- Kartu Kartu Keluarga & Domisili -->
                         @if ($kartuKeluarga)
                             <div class="bg-white rounded-2xl border-2 border-desa-border p-6 shadow-xs">
                                 <div class="flex items-center gap-3 border-b-2 border-desa-border/30 pb-4 mb-5">
@@ -366,11 +337,8 @@
                                     </div>
                                     <div>
                                         <h3 class="text-lg font-extrabold text-desa-dark">
-                                            Data Kartu Keluarga (KK) &amp; Domisili
+                                            Data Kartu Keluarga &amp; Domisili
                                         </h3>
-                                        <p class="text-xs text-desa-muted">
-                                            Keluarga tercatat di database Pemerintah Desa Pabelan.
-                                        </p>
                                     </div>
                                 </div>
 
@@ -416,12 +384,11 @@
                                             Alamat Lengkap Domisili
                                         </p>
                                         <p class="text-sm font-bold text-desa-dark mt-0.5">
-                                            {{ $kartuKeluarga->alamat }}, Desa Pabelan, Kec. Kartasura, Kab. Sukoharjo, Jawa Tengah (Kode Pos: {{ $kartuKeluarga->kode_pos ?? '57169' }})
+                                            {{ $kartuKeluarga->alamat }}, Desa Pabelan, Kec. Kartasura, Kab. Sukoharjo, Jawa Tengah {{ $kartuKeluarga->kode_pos ?? '57169' }}
                                         </p>
                                     </div>
                                 </div>
 
-                                <!-- Tabel Anggota Keluarga dalam 1 KK -->
                                 @if ($anggotaKeluarga->isNotEmpty())
                                     <div class="mt-6 border-t-2 border-desa-border/30 pt-5">
                                         <h4 class="text-sm font-extrabold text-desa-dark mb-3">
@@ -444,9 +411,6 @@
                                                             <td class="py-2.5 px-3 font-mono">{{ $idx + 1 }}</td>
                                                             <td class="py-2.5 px-3 text-desa-dark">
                                                                 {{ $anggota->nama_lengkap }}
-                                                                @if ($anggota->id === $warga->id)
-                                                                    <span class="ml-1 text-[10px] text-desa-action font-extrabold">(Saya)</span>
-                                                                @endif
                                                             </td>
                                                             <td class="py-2.5 px-3 font-mono text-desa-muted">{{ $anggota->nik }}</td>
                                                             <td class="py-2.5 px-3">{{ $anggota->status_hubungan_keluarga }}</td>
@@ -461,7 +425,6 @@
                             </div>
                         @endif
                     @else
-                        <!-- Tampilan Bila Akun Belum Ditautkan ke Data Warga -->
                         <div class="bg-white rounded-2xl border-2 border-desa-border p-8 shadow-xs text-center space-y-4">
                             <div class="w-16 h-16 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center mx-auto border-2 border-amber-300">
                                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -471,9 +434,6 @@
                             <h3 class="text-xl font-extrabold text-desa-dark">
                                 Akun Belum Terhubung dengan Data Warga
                             </h3>
-                            <p class="text-sm text-desa-muted max-w-lg mx-auto leading-relaxed">
-                                Akun Anda belum ditautkan dengan Nomor Induk Kependudukan (NIK) di database kependudukan Desa Pabelan. Silakan hubungi petugas kantor desa untuk memverifikasi dan menghubungkan data akun Anda.
-                            </p>
                         </div>
                     @endif
                 </div>
@@ -481,7 +441,6 @@
         </div>
     </x-section-wrapper>
 
-    {{-- Script Pratinjau Foto Profil Langsung di Browser --}}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const avatarInput = document.getElementById('avatar');

@@ -10,6 +10,8 @@ class Galeri extends Model
 {
     use HasFactory;
 
+    public const KATEGORI = ['Kegiatan', 'Pembangunan', 'Pemerintahan', 'Budaya', 'Olahraga', 'Lainnya'];
+
     protected $table = 'galeris';
 
     protected $fillable = [
@@ -32,5 +34,14 @@ class Galeri extends Model
     public function fotos(): HasMany
     {
         return $this->hasMany(GaleriFoto::class, 'galeri_id');
+    }
+
+    public function getCoverUrlAttribute(): ?string
+    {
+        if ($this->cover_image && file_exists(public_path($this->cover_image))) {
+            return asset($this->cover_image);
+        }
+
+        return null;
     }
 }

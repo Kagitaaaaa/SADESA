@@ -8,7 +8,7 @@
 
     $bidang = [
         ['nama' => 'kartu_keluarga_id', 'label' => 'Kartu Keluarga', 'tipe' => 'select', 'wajib' => true, 'opsi' => $opsiKk, 'lebar' => 'sm:col-span-2'],
-        ['nama' => 'nik', 'label' => 'NIK (sesuai KTP-el)', 'tipe' => 'text', 'wajib' => true, 'contoh' => '16 digit angka'],
+        ['nama' => 'nik', 'label' => 'NIK', 'tipe' => 'text', 'wajib' => true, 'contoh' => '16 digit angka'],
         ['nama' => 'nama_lengkap', 'label' => 'Nama Lengkap', 'tipe' => 'text', 'wajib' => true, 'contoh' => 'Contoh: Budi Santoso'],
         ['nama' => 'jenis_kelamin', 'label' => 'Jenis Kelamin', 'tipe' => 'select', 'wajib' => true, 'opsi' => $sama(\App\Models\Warga::JENIS_KELAMIN)],
         ['nama' => 'tempat_lahir', 'label' => 'Tempat Lahir', 'tipe' => 'text', 'wajib' => true, 'contoh' => 'Contoh: Sukoharjo'],

@@ -9,15 +9,12 @@
     <x-section-wrapper bgVariant="mist">
         <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
             <div>
-                <a href="{{ route('warga.surat.index') }}" class="inline-flex items-center gap-1.5 text-xs font-bold text-desa-action hover:underline mb-1">
+                <a href="{{ route('warga.surat.index') }}" class="min-h-[44px] inline-flex items-center gap-1.5 text-xs font-bold text-desa-action hover:underline mb-1">
                     &larr; Kembali ke Daftar Riwayat Surat
                 </a>
                 <h1 class="text-2xl sm:text-3xl font-extrabold text-desa-dark tracking-tight">
                     Detail Permohonan: {{ $surat->jenisSurat->nama_surat ?? 'Surat Keterangan' }}
                 </h1>
-                <p class="text-xs font-mono text-desa-muted mt-1">
-                    ID Permohonan: #SRT-{{ str_pad((string) $surat->id, 4, '0', STR_PAD_LEFT) }} &bull; Diajukan pada {{ $surat->tanggal_pengajuan ? $surat->tanggal_pengajuan->format('d M Y, H:i') : $surat->created_at->format('d M Y, H:i') }} WIB
-                </p>
             </div>
 
             <div class="flex flex-wrap items-center gap-2.5">
@@ -27,7 +24,7 @@
                         target="_blank"
                         class="min-h-[44px] inline-flex items-center px-5 py-2.5 rounded-lg bg-desa-action text-white text-sm font-extrabold hover:bg-desa-dark transition-colors"
                     >
-                        Unduh / Cetak Surat (PDF A4)
+                        Unduh / Cetak Surat
                     </a>
                     @if ($surat->qr_token)
                         <a
@@ -48,7 +45,6 @@
             </div>
         @endif
 
-        <!-- Banner Status Real-Time -->
         @if (in_array($surat->status, ['disetujui', 'selesai']))
             <div class="mb-6 rounded-2xl border-2 border-emerald-700 bg-emerald-50 p-5 text-emerald-950 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div class="space-y-1">
@@ -56,12 +52,11 @@
                         STATUS: DISETUJUI &amp; SIAP CETAK
                     </span>
                     <h2 class="text-lg font-extrabold">
-                        Surat Pengantar Anda Telah Diterbitkan Resmi oleh Pemerintah Desa Pabelan
+                        Surat Pengantar Telah Diterbitkan Resmi
                     </h2>
                     <p class="text-xs">
                         Nomor Surat Resmi: <strong class="font-mono">{{ $surat->nomor_surat }}</strong> &bull;
-                        Penandatangan: <strong>{{ $pejabat->nama ?? 'Kepala Desa Pabelan' }} ({{ $pejabat->jabatan ?? 'Kepala Desa' }})</strong> &bull;
-                        Metode Pengesahan: <strong>{{ $surat->tipe_ttd === 'qrcode' ? 'QR Code Tanda Tangan Elektronik' : 'Tanda Tangan Basah' }}</strong>
+                        Penandatangan: <strong>{{ $pejabat->nama ?? 'Kepala Desa Pabelan' }}</strong>
                     </p>
                 </div>
                 <a
@@ -69,7 +64,7 @@
                     target="_blank"
                     class="shrink-0 min-h-[44px] inline-flex items-center justify-center px-5 py-2.5 rounded-xl bg-emerald-800 text-white text-xs font-extrabold hover:bg-emerald-950 transition-colors"
                 >
-                    Buka Dokumen A4 Siap Cetak
+                    Buka Dokumen Siap Cetak
                 </a>
             </div>
         @elseif ($surat->status === 'ditolak')
@@ -79,7 +74,7 @@
                         STATUS: PERMOHONAN DITOLAK
                     </span>
                     <h2 class="text-lg font-extrabold">
-                        Mohon Maaf, Permohonan Surat Perlu Diperbaiki
+                        Permohonan Surat Perlu Diperbaiki
                     </h2>
                     <p class="text-sm font-semibold">
                         Alasan Penolakan Admin: "{{ $alasanTolak ?: 'Berkas persyaratan belum lengkap atau kurang jelas.' }}"
@@ -98,11 +93,8 @@
                     STATUS: TAHAP 2 • LOLOS VERIFIKASI • MENUNGGU PENGESAHAN KEPALA DESA
                 </span>
                 <h2 class="text-base font-extrabold">
-                    Dokumen Anda Sedang Menunggu Tanda Tangan Resmi Kepala Desa Pabelan
+                    Menunggu Tanda Tangan Resmi Kepala Desa Pabelan
                 </h2>
-                <p class="text-xs mt-0.5 text-desa-muted">
-                    Persyaratan berkas telah diverifikasi lengkap oleh staf pelayanan. Setelah Kepala Desa membubuhkan tanda tangan elektronik QR Code, dokumen resmi A4 siap diunduh dan dicetak secara mandiri.
-                </p>
             </div>
         @else
             <div class="mb-6 rounded-2xl border-2 border-amber-600 bg-amber-50 p-5 text-amber-950 space-y-1">
@@ -110,16 +102,12 @@
                     STATUS: TAHAP 1 • MENUNGGU VERIFIKASI BERKAS STAF PELAYANAN
                 </span>
                 <h2 class="text-base font-extrabold">
-                    Permohonan Anda Sedang Dalam Antrean Pemeriksaan Berkas
+                    Permohonan Dalam Antrean Pemeriksaan Berkas
                 </h2>
-                <p class="text-xs mt-0.5">
-                    Staf pelayanan Desa Pabelan sedang memeriksa kelengkapan dokumen persyaratan Anda. Anda dapat memantau perkembangan status verifikasi secara berkala di halaman ini.
-                </p>
             </div>
         @endif
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            <!-- Rincian Biodata & Data Tambahan -->
             <div class="lg:col-span-7 bg-white rounded-2xl border-2 border-desa-border p-6 space-y-6">
                 <div>
                     <h2 class="text-lg font-extrabold text-desa-dark pb-2 border-b-2 border-desa-soft">
@@ -168,7 +156,6 @@
                 </div>
             </div>
 
-            <!-- Daftar Berkas Lampiran yang Diunggah -->
             <div class="lg:col-span-5 bg-white rounded-2xl border-2 border-desa-border p-6 space-y-4">
                 <h2 class="text-lg font-extrabold text-desa-dark pb-2 border-b-2 border-desa-soft">
                     C. Berkas Persyaratan Terunggah
@@ -187,14 +174,14 @@
                                 <div class="min-w-0">
                                     <p class="text-xs font-extrabold text-desa-dark">{{ $label }}</p>
                                     <p class="text-[11px] font-mono text-desa-muted truncate">
-                                        {{ $orig }} {{ $size ? '(' . $size . ')' : '' }}
+                                        {{ $orig }} {{ $size ? '• ' . $size : '' }}
                                     </p>
                                 </div>
                                 @if ($path)
                                     <a
                                         href="{{ asset('storage/' . $path) }}"
                                         target="_blank"
-                                        class="shrink-0 min-h-[38px] inline-flex items-center px-3 py-1.5 rounded-lg bg-white text-desa-action border border-desa-border text-xs font-bold hover:bg-desa-soft"
+                                        class="shrink-0 min-h-[44px] inline-flex items-center px-3 py-1.5 rounded-lg bg-white text-desa-action border border-desa-border text-xs font-bold hover:bg-desa-soft"
                                     >
                                         Lihat Berkas
                                     </a>
@@ -205,7 +192,7 @@
                 @elseif ($surat->file_lampiran)
                     <div class="p-4 rounded-xl bg-desa-mist border border-desa-border flex items-center justify-between">
                         <span class="text-xs font-bold text-desa-dark">Berkas Lampiran Utama</span>
-                        <a href="{{ asset('storage/' . $surat->file_lampiran) }}" target="_blank" class="text-xs font-bold text-desa-action hover:underline">
+                        <a href="{{ asset('storage/' . $surat->file_lampiran) }}" target="_blank" class="min-h-[44px] inline-flex items-center text-xs font-bold text-desa-action hover:underline">
                             Buka Berkas
                         </a>
                     </div>

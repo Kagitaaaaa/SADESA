@@ -1,3 +1,7 @@
+@php
+    $bolehKelola = auth()->check() && auth()->user()->role === 'admin';
+@endphp
+
 <x-admin-layout title="Data Kartu Keluarga" activeMenu="kk">
     <div class="space-y-5">
         @include('admin.kependudukan._tab', ['aktif' => 'kk'])
@@ -22,9 +26,11 @@
                 @endif
             </form>
 
-            <x-button variant="primary" href="{{ route('admin.kependudukan.kk.create') }}">
-                + Tambah Kartu Keluarga
-            </x-button>
+            @if ($bolehKelola)
+                <x-button variant="primary" href="{{ route('admin.kependudukan.kk.create') }}">
+                    + Tambah Kartu Keluarga
+                </x-button>
+            @endif
         </div>
 
         @if ($kartuKeluargas->isEmpty())
@@ -44,7 +50,9 @@
                                 <th class="py-3.5 px-4">Kepala Keluarga</th>
                                 <th class="py-3.5 px-4">Alamat</th>
                                 <th class="py-3.5 px-4">Anggota</th>
-                                <th class="py-3.5 px-4 text-right">Aksi</th>
+                                @if ($bolehKelola)
+                                    <th class="py-3.5 px-4 text-right">Aksi</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-blue-200 text-sm">
@@ -57,30 +65,32 @@
                                         {{ $kk->dusun }} &bull; RT {{ $kk->rt }} / RW {{ $kk->rw }}
                                     </td>
                                     <td class="py-3.5 px-4 text-desa-dark">{{ $kk->wargas_count }} orang</td>
-                                    <td class="py-3.5 px-4">
-                                        <div class="flex justify-end gap-2">
-                                            <a
-                                                href="{{ route('admin.kependudukan.kk.edit', $kk) }}"
-                                                class="min-h-[44px] inline-flex items-center px-3 py-1.5 rounded-lg bg-desa-soft text-desa-dark border border-desa-border text-xs font-bold hover:bg-desa-bright"
-                                            >
-                                                Ubah
-                                            </a>
-                                            <form
-                                                method="POST"
-                                                action="{{ route('admin.kependudukan.kk.destroy', $kk) }}"
-                                                onsubmit="return confirm('Hapus KK {{ $kk->no_kk }}? Tindakan ini tidak bisa dibatalkan.')"
-                                            >
-                                                @csrf
-                                                @method('DELETE')
-                                                <button
-                                                    type="submit"
-                                                    class="min-h-[44px] px-3 py-1.5 rounded-lg bg-red-100 text-red-950 border border-red-700 text-xs font-bold hover:bg-red-200"
+                                    @if ($bolehKelola)
+                                        <td class="py-3.5 px-4">
+                                            <div class="flex justify-end gap-2">
+                                                <a
+                                                    href="{{ route('admin.kependudukan.kk.edit', $kk) }}"
+                                                    class="min-h-[44px] inline-flex items-center px-3 py-1.5 rounded-lg bg-desa-soft text-desa-dark border border-desa-border text-xs font-bold hover:bg-desa-bright"
                                                 >
-                                                    Hapus
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
+                                                    Ubah
+                                                </a>
+                                                <form
+                                                    method="POST"
+                                                    action="{{ route('admin.kependudukan.kk.destroy', $kk) }}"
+                                                    onsubmit="return confirm('Hapus KK {{ $kk->no_kk }}? Tindakan ini tidak bisa dibatalkan.')"
+                                                >
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button
+                                                        type="submit"
+                                                        class="min-h-[44px] px-3 py-1.5 rounded-lg bg-red-100 text-red-950 border border-red-700 text-xs font-bold hover:bg-red-200 cursor-pointer"
+                                                    >
+                                                        Hapus
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>

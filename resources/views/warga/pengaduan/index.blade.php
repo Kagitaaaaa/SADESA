@@ -1,13 +1,9 @@
 <x-app-layout :title="'Riwayat Pengaduan Saya'" activeNav="pengaduan">
     <x-section-wrapper bgVariant="mist">
         <div class="space-y-6">
-            <div class="flex flex-wrap items-end justify-between gap-4">
+            <div class="flex flex-wrap items-center justify-between gap-4">
                 <div>
-                    <span class="inline-block px-3 py-1 rounded-md bg-desa-soft text-desa-dark border border-desa-border text-xs font-bold mb-2">
-                        Portal Layanan Warga
-                    </span>
                     <h1 class="text-2xl sm:text-3xl font-extrabold text-desa-dark tracking-tight">Riwayat Pengaduan Saya</h1>
-                    <p class="text-sm text-desa-muted mt-2">Pantau pengaduan yang dikirim menggunakan akun warga Anda.</p>
                 </div>
                 <x-button variant="primary" href="{{ route('pengaduan.index') }}">+ Buat Pengaduan</x-button>
             </div>

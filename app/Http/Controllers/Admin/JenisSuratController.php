@@ -9,21 +9,15 @@ use Illuminate\Support\Facades\Auth;
 
 class JenisSuratController extends Controller
 {
-    /**
-     * Memastikan hanya akun Admin / Perangkat Desa / Kepala Desa yang sudah login yang dapat mengakses.
-     */
     protected function ensureAdminAccess(): void
     {
         $user = Auth::user();
 
         if (! $user || ! $user->isAdmin()) {
-            abort(403, 'Akses ditolak. Pengaturan master jenis surat khusus untuk Admin / Perangkat Desa / Kepala Desa.');
+            abort(403, 'Akses ditolak. Pengaturan penambahan jenis surat khusus untuk Admin / Perangkat Desa / Kepala Desa.');
         }
     }
 
-    /**
-     * Menampilkan katalog 14+ master jenis surat desa beserta form tambah/edit.
-     */
     public function index(Request $request)
     {
         $this->ensureAdminAccess();
@@ -47,9 +41,6 @@ class JenisSuratController extends Controller
         return view('admin.surat.jenis', compact('jenisSurats', 'daftarKategori', 'kategoriFilter'));
     }
 
-    /**
-     * Menyimpan master jenis surat baru beserta konfigurasi syarat berkas & input tambahan.
-     */
     public function store(Request $request)
     {
         $this->ensureAdminAccess();
@@ -88,12 +79,9 @@ class JenisSuratController extends Controller
 
         return redirect()
             ->route('admin.surat.jenis')
-            ->with('success', 'Master jenis surat baru berhasil ditambahkan.');
+            ->with('success', 'Jenis surat baru berhasil ditambahkan.');
     }
 
-    /**
-     * Memperbarui data master jenis surat.
-     */
     public function update(Request $request, $id)
     {
         $this->ensureAdminAccess();
@@ -137,18 +125,16 @@ class JenisSuratController extends Controller
 
         return redirect()
             ->route('admin.surat.jenis')
-            ->with('success', 'Master jenis surat ' . $jenisSurat->nama_surat . ' berhasil diperbarui.');
+            ->with('success', 'Jenis surat ' . $jenisSurat->nama_surat . ' berhasil diperbarui.');
     }
 
-    /**
-     * Menghapus atau menonaktifkan master jenis surat.
-     */
     public function destroy($id)
     {
         $this->ensureAdminAccess();
 
         $jenisSurat = JenisSurat::withCount('suratPengantars')->findOrFail($id);
 
+        // Preserve historical applications by deactivating instead of deleting when referenced.
         if ($jenisSurat->surat_pengantars_count > 0) {
             $jenisSurat->update(['is_aktif' => false]);
 
@@ -161,12 +147,9 @@ class JenisSuratController extends Controller
 
         return redirect()
             ->route('admin.surat.jenis')
-            ->with('success', 'Master jenis surat berhasil dihapus.');
+            ->with('success', 'Jenis surat berhasil dihapus.');
     }
 
-    /**
-     * Mengubah input teks per baris (atau JSON) menjadi struktur array syarat_tambahan.
-     */
     protected function parseSyaratTambahan(string $raw): array
     {
         $trimmed = trim($raw);
@@ -197,9 +180,6 @@ class JenisSuratController extends Controller
             ->all();
     }
 
-    /**
-     * Mengubah input teks per baris (atau JSON) menjadi struktur array form_input_tambahan.
-     */
     protected function parseFormInputTambahan(string $raw): array
     {
         $trimmed = trim($raw);

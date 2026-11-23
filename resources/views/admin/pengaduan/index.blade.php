@@ -6,10 +6,6 @@
             </div>
         @endif
 
-        <div>
-            <p class="text-sm text-desa-muted">Pantau pengaduan masuk, periksa bukti, dan tindak lanjuti aspirasi warga.</p>
-        </div>
-
         <div class="bg-white rounded-2xl border-2 border-desa-border p-5 shadow-xs">
             <form action="{{ route('admin.pengaduan.index') }}" method="GET" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
                 <div class="lg:col-span-2">
@@ -93,10 +89,13 @@
                                         {{ $pengaduan->kode_pengaduan }}
                                     </td>
                                     <td class="py-3.5 px-4 min-w-44">
-                                        <p class="font-bold text-desa-dark">{{ $pengaduan->nama_pelapor }}</p>
-                                        <p class="text-xs text-desa-muted">{{ $pengaduan->no_hp }}</p>
                                         @if ($pengaduan->is_anonim)
+                                            <p class="font-bold text-desa-dark">Pelapor Anonim</p>
+                                            <p class="text-xs text-desa-muted">Nomor dirahasiakan</p>
                                             <span class="inline-flex mt-1 px-2 py-0.5 rounded-full bg-desa-soft text-desa-dark border border-desa-border text-xs font-bold">Anonim</span>
+                                        @else
+                                            <p class="font-bold text-desa-dark">{{ $pengaduan->nama_pelapor }}</p>
+                                            <p class="text-xs text-desa-muted">{{ $pengaduan->no_hp }}</p>
                                         @endif
                                     </td>
                                     <td class="py-3.5 px-4 min-w-56">

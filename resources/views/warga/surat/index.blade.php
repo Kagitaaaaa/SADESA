@@ -1,16 +1,10 @@
 <x-app-layout :title="'Pantau Status Permohonan Surat'" activeNav="surat">
     <x-section-wrapper bgVariant="mist">
-        <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
             <div>
-                <span class="inline-block px-3 py-1 rounded-md bg-desa-soft text-desa-dark border border-desa-border text-xs font-bold mb-2">
-                    Portal Layanan Mandiri Warga &bull; Desa Pabelan
-                </span>
                 <h1 class="text-2xl sm:text-3xl font-extrabold text-desa-dark tracking-tight">
                     Riwayat &amp; Pemantauan Status E-Surat
                 </h1>
-                <p class="text-sm text-desa-muted mt-1">
-                    Pantau proses verifikasi surat pengantar yang Anda ajukan secara real-time dan unduh dokumen resmi berukuran A4 setelah disetujui.
-                </p>
             </div>
             <div class="flex flex-wrap items-center gap-2.5">
                 <x-button variant="primary" href="{{ route('warga.surat.create') }}">
@@ -46,7 +40,6 @@
             </div>
         @endif
 
-        <!-- Filter Status Real-Time -->
         <div class="flex flex-wrap items-center gap-2 mb-6" role="navigation" aria-label="Filter Status Surat">
             <a
                 href="{{ route('warga.surat.index') }}"
@@ -111,7 +104,7 @@
                                             'class' => 'bg-desa-soft text-desa-dark border-desa-border',
                                         ],
                                         'ditolak' => [
-                                            'label' => 'Ditolak (Perlu Perbaikan)',
+                                            'label' => 'Ditolak',
                                             'class' => 'bg-red-100 text-red-950 border-red-700',
                                         ],
                                         default => [
@@ -181,7 +174,7 @@
                                                     target="_blank"
                                                     class="min-h-[44px] inline-flex items-center px-3.5 py-2 rounded-lg bg-desa-action text-white text-xs font-bold hover:bg-desa-dark transition-colors"
                                                 >
-                                                    Unduh Surat (PDF)
+                                                    Unduh Surat
                                                 </a>
                                             @endif
                                         </div>

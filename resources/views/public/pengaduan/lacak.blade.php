@@ -1,13 +1,9 @@
 <x-app-layout :title="'Lacak Pengaduan'" activeNav="pengaduan">
     <x-section-wrapper bgVariant="mist">
         <div class="space-y-6">
-            <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+            <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
                 <div>
-                    <span class="inline-block px-3 py-1 rounded-md bg-desa-soft text-desa-dark border border-desa-border text-xs font-bold mb-2">
-                        Layanan Pengaduan Warga
-                    </span>
                     <h1 class="text-2xl sm:text-3xl font-extrabold text-desa-dark tracking-tight">Lacak Status Pengaduan</h1>
-                    <p class="text-sm text-desa-muted mt-2">Masukkan kode tiket yang Anda terima setelah mengirim pengaduan.</p>
                 </div>
                 <x-button variant="secondary" href="{{ route('warga.pengaduan.index') }}">
                     Lihat Riwayat Pengaduan Saya

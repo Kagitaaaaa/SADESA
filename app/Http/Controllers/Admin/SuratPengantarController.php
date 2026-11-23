@@ -14,9 +14,6 @@ use Illuminate\Support\Str;
 
 class SuratPengantarController extends Controller
 {
-    /**
-     * Memastikan hanya akun Admin / Perangkat Desa / Kepala Desa yang sudah login yang dapat mengakses.
-     */
     protected function ensureAdminAccess(): User
     {
         $user = Auth::user();
@@ -28,9 +25,6 @@ class SuratPengantarController extends Controller
         return $user;
     }
 
-    /**
-     * Menampilkan dashboard antrean & seluruh riwayat surat warga dengan filter Status, Jenis Surat, dan Pencarian NIK/Nama.
-     */
     public function index(Request $request)
     {
         $this->ensureAdminAccess();
@@ -39,8 +33,17 @@ class SuratPengantarController extends Controller
         $jenisFilter = $request->query('jenis_surat_id');
         $pencarian = trim((string) $request->query('q', ''));
 
+        // Default view shows only active queue items (pending & diproses); completed items live in their own tabs.
         $surats = SuratPengantar::with(['warga.kartuKeluarga', 'jenisSurat', 'aparatur', 'ttdAparatur'])
-            ->when($statusFilter, fn ($q) => $q->where('status', $statusFilter))
+            ->when(
+                $statusFilter === 'disetujui' || $statusFilter === 'diterima',
+                fn ($q) => $q->whereIn('status', ['disetujui', 'selesai']),
+                fn ($q) => $q->when(
+                    in_array($statusFilter, ['pending', 'diproses', 'ditolak'], true),
+                    fn ($sub) => $sub->where('status', $statusFilter),
+                    fn ($sub) => $sub->whereIn('status', ['pending', 'diproses'])
+                )
+            )
             ->when($jenisFilter, fn ($q) => $q->where('jenis_surat_id', $jenisFilter))
             ->when($pencarian !== '', function ($q) use ($pencarian) {
                 $q->where(function ($sub) use ($pencarian) {
@@ -60,6 +63,7 @@ class SuratPengantarController extends Controller
 
         $statistik = [
             'total' => SuratPengantar::count(),
+            'antrean' => SuratPengantar::whereIn('status', ['pending', 'diproses'])->count(),
             'pending' => SuratPengantar::where('status', 'pending')->count(),
             'diproses' => SuratPengantar::where('status', 'diproses')->count(),
             'disetujui' => SuratPengantar::whereIn('status', ['disetujui', 'selesai'])->count(),
@@ -76,10 +80,6 @@ class SuratPengantarController extends Controller
         ));
     }
 
-    /**
-     * Halaman kerja admin untuk memverifikasi isian & berkas warga, mengonfirmasi Nomor Surat,
-     * memilih Aparatur Penandatangan, serta memberikan keputusan (ACC / Tolak).
-     */
     public function proses($id)
     {
         $this->ensureAdminAccess();
@@ -93,9 +93,6 @@ class SuratPengantarController extends Controller
         return view('admin.surat.proses', compact('surat', 'aparaturs', 'rekomendasiNomor'));
     }
 
-    /**
-     * Endpoint terpadu untuk keputusan Admin / Kades (Verifikasi Berkas, Sahkan/ACC, atau Tolak).
-     */
     public function keputusan(Request $request, $id)
     {
         $this->ensureAdminAccess();
@@ -113,10 +110,7 @@ class SuratPengantarController extends Controller
         return $this->setujui($request, $id);
     }
 
-    /**
-     * Tahap 1 (Alur Berjenjang): Verifikasi kelengkapan berkas fisik/lampiran oleh Admin/Staf Pelayanan,
-     * menyusun draf Nomor Surat, dan meneruskan berkas ke antrean pengesahan Kepala Desa (status: diproses).
-     */
+    // Stage 1: staff verifies attachments and forwards the draft number to the village head (status: diproses).
     public function verifikasi(Request $request, $id)
     {
         $adminUser = $this->ensureAdminAccess();
@@ -148,10 +142,7 @@ class SuratPengantarController extends Controller
             ->with('success', 'Berkas berhasil diverifikasi lengkap. Surat telah diteruskan ke antrean pengesahan Kepala Desa.');
     }
 
-    /**
-     * Tahap 2 (Alur Berjenjang): Pengesahan Akhir & Tanda Tangan oleh Kepala Desa (ACC Kades),
-     * menerbitkan QR Code Elektronik resmi atau ruang tanda tangan basah, dan mengaktifkan dokumen cetak (status: disetujui).
-     */
+    // Stage 2: final approval and signature by the village head (status: disetujui).
     public function setujui(Request $request, $id)
     {
         $adminUser = $this->ensureAdminAccess();
@@ -190,16 +181,13 @@ class SuratPengantarController extends Controller
 
         $pesanSukses = $adminUser->role === 'kades'
             ? 'Surat pengantar resmi berhasil disahkan oleh Kepala Desa dengan Nomor: ' . $surat->nomor_surat
-            : 'Permohonan surat berhasil disetujui (ACC) dengan Nomor Surat: ' . $surat->nomor_surat;
+            : 'Permohonan surat berhasil disetujui dengan Nomor Surat: ' . $surat->nomor_surat;
 
         return redirect()
             ->route('admin.surat.proses', $surat->id)
             ->with('success', $pesanSukses);
     }
 
-    /**
-     * Menolak permohonan surat warga dengan wajib mencantumkan alasan_penolakan.
-     */
     public function tolak(Request $request, $id)
     {
         $adminUser = $this->ensureAdminAccess();
@@ -226,9 +214,6 @@ class SuratPengantarController extends Controller
             ->with('success', 'Permohonan surat telah ditolak beserta catatan perbaikan untuk warga.');
     }
 
-    /**
-     * Menampilkan / mencetak dokumen surat resmi ukuran A4 lengkap dengan Kop Surat & QR Code.
-     */
     public function cetak(Request $request, $id)
     {
         $this->ensureAdminAccess();
@@ -253,9 +238,6 @@ class SuratPengantarController extends Controller
         return view('surat.cetak.template-surat', compact('surat', 'profil', 'penandatangan'));
     }
 
-    /**
-     * Helper untuk menyusun draf Nomor Surat Resmi sesuai format_nomor pada JenisSurat.
-     */
     protected function generateNomorSuratOtomatis(SuratPengantar $surat): string
     {
         $format = $surat->jenisSurat->format_nomor ?? '{KODE}/{NOMOR}/DS-PBL/{BULAN}/{TAHUN}';

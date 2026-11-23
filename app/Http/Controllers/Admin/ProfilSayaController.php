@@ -12,9 +12,6 @@ use Illuminate\View\View;
 
 class ProfilSayaController extends Controller
 {
-    /**
-     * Tampilkan halaman profil akun aparatur / administrator.
-     */
     public function show(Request $request): View
     {
         $user = $request->user();
@@ -27,9 +24,6 @@ class ProfilSayaController extends Controller
         return view('admin.profil.saya', compact('user', 'warga', 'kartuKeluarga', 'anggotaKeluarga'));
     }
 
-    /**
-     * Perbarui data akun aparatur / admin: foto profil, kontak, email, dan kata sandi.
-     */
     public function update(Request $request): RedirectResponse
     {
         $user = $request->user();
@@ -53,7 +47,6 @@ class ProfilSayaController extends Controller
             'password_baru.confirmed' => 'Konfirmasi kata sandi baru tidak cocok.',
         ]);
 
-        // 1. Unggah Foto Profil (Avatar)
         if ($request->hasFile('avatar')) {
             $avatarFile = $request->file('avatar');
             if ($avatarFile && $avatarFile->isValid()) {
@@ -80,17 +73,14 @@ class ProfilSayaController extends Controller
             $user->avatar = null;
         }
 
-        // 2. Perbarui Email
         $user->email = $request->email;
 
-        // 3. Perbarui Kata Sandi (opsional)
         if ($request->filled('password_baru')) {
             $user->password = Hash::make($request->password_baru);
         }
 
         $user->save();
 
-        // 4. Perbarui Nomor HP pada Data Warga jika akun terhubung
         if ($warga && $request->has('no_hp')) {
             $warga->update([
                 'no_hp' => $request->input('no_hp'),

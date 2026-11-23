@@ -23,11 +23,7 @@ class PengaduanAdminController extends Controller
 
     public function index(Request $request)
     {
-<<<<<<< Updated upstream
-        $filter = $request->validate([
-=======
         $filters = $request->validate([
->>>>>>> Stashed changes
             'kategori' => ['nullable', 'string', Rule::in(self::KATEGORI)],
             'status' => ['nullable', 'string', Rule::in(self::STATUS)],
         ], [
@@ -35,15 +31,6 @@ class PengaduanAdminController extends Controller
             'status.in' => 'Status pengaduan tidak valid.',
         ]);
 
-<<<<<<< Updated upstream
-        $pengaduans = Pengaduan::query()
-            ->with('warga')
-            ->when($filter['kategori'] ?? null, fn ($query, $kategori) => $query->where('kategori', $kategori))
-            ->when($filter['status'] ?? null, fn ($query, $status) => $query->where('status', $status))
-            ->latest()
-            ->paginate(15)
-            ->withQueryString();
-=======
         $query = Pengaduan::with('warga')->latest();
 
         if (!empty($filters['kategori'])) {
@@ -55,7 +42,6 @@ class PengaduanAdminController extends Controller
         }
 
         $pengaduans = $query->paginate(15)->withQueryString();
->>>>>>> Stashed changes
 
         return view('admin.pengaduan.index', compact('pengaduans'));
     }
@@ -63,10 +49,6 @@ class PengaduanAdminController extends Controller
     public function show($id)
     {
         $pengaduan = Pengaduan::with(['warga', 'ditanggapiOleh'])->findOrFail($id);
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         return view('admin.pengaduan.tanggapi', compact('pengaduan'));
     }
 
@@ -75,22 +57,6 @@ class PengaduanAdminController extends Controller
         $this->pastikanAdmin($request);
 
         $data = $request->validate([
-<<<<<<< Updated upstream
-            'tanggapan' => ['required', 'string', 'max:10000'],
-        ], [
-            'tanggapan.required' => 'Tanggapan wajib diisi.',
-            'tanggapan.max' => 'Tanggapan maksimal 10.000 karakter.',
-        ]);
-
-        $pengaduan = Pengaduan::findOrFail($id);
-        $pengaduan->update([
-            'tanggapan' => $data['tanggapan'],
-            'ditanggapi_oleh' => $request->user()->id,
-            'tanggal_tanggapan' => now(),
-        ]);
-
-        return back()->with('sukses', 'Tanggapan pengaduan berhasil disimpan.');
-=======
             'status' => ['required', 'string', Rule::in(self::STATUS)],
             'tanggapan' => ['nullable', 'string', 'max:10000'],
         ], [
@@ -114,7 +80,6 @@ class PengaduanAdminController extends Controller
         return redirect()
             ->route('admin.pengaduan.tanggapi', $pengaduan->id)
             ->with('sukses', 'Status dan tanggapan pengaduan berhasil disimpan.');
->>>>>>> Stashed changes
     }
 
     public function updateStatus(Request $request, $id): RedirectResponse

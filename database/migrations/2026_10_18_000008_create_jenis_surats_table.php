@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('kategori', 100)->default('Kategori A: Kependudukan & Catatan Sipil');
             $table->string('kode_surat', 30)->unique(); // 470, 472.11, 401, 503, 331, dll.
             $table->string('nama_surat', 150);
-            $table->string('format_nomor', 100)->nullable(); // 470/{NOMOR}/DS-KJW/{BULAN}/{TAHUN}
+            $table->string('format_nomor', 100)->nullable(); // 470/{NOMOR}/DS-PBL/{BULAN}/{TAHUN}
             $table->text('deskripsi_kegunaan')->nullable();
             $table->text('deskripsi')->nullable();
             $table->text('syarat_dokumen')->nullable();

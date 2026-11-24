@@ -1,3 +1,4 @@
+
 <?php
 
 use App\Http\Controllers\Admin\AgendaAdminController;
@@ -109,13 +110,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
             });
         });
 
-        // 5. Modul Profil Desa & Aparatur (Anggota 5: Muhammad Ramdhani - K3524080)
-            Route::prefix('profil-desa')
-                ->name('profil.')
-                ->middleware(PeranDiizinkan::class.':admin,kades')
-                ->group(function () {
-                Route::get('/pengaturan', [ProfilDesaController::class, 'edit'])->name('edit');
-                Route::put('/pengaturan', [ProfilDesaController::class, 'update'])->name('update');
+    // 5. Modul Profil Desa & Aparatur (Anggota 5: Muhammad Ramdhani - K3524080)
+    Route::prefix('profil-desa')
+        ->name('profil.')
+        ->middleware(PeranDiizinkan::class.':admin,kades')
+        ->group(function () {
+            Route::get('/pengaturan', [ProfilDesaController::class, 'edit'])->name('edit');
+            Route::put('/pengaturan', [ProfilDesaController::class, 'update'])->name('update');
+
             Route::prefix('aparatur')->name('aparatur.')->group(function () {
                 Route::get('/', [AparaturController::class, 'index'])->name('index');
                 Route::post('/', [AparaturController::class, 'store'])->name('store');
@@ -124,10 +126,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
             });
         });
 
-
-        // Struktur Aparatur Desa
-        Route::get('/aparatur', [ProfilDesaController::class, 'aparatur'])->name('aparatur.index');
-    });
+    // Struktur Aparatur Desa
+    Route::get('/aparatur', [ProfilDesaController::class, 'aparatur'])->name('aparatur.index');
 
     // Profil Akun Pengguna Administrator / Aparatur
     Route::get('/profil-saya', [App\Http\Controllers\Admin\ProfilSayaController::class, 'show'])->name('profil.saya');
@@ -139,3 +139,4 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
             return view('admin.panduan.index');
         })->name('index');
     });
+});

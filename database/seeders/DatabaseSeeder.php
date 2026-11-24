@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Profil Desa (Sumber data Kop Surat & Halaman About)
+        // 1. Profil Desa
         ProfilDesa::query()->delete();
         ProfilDesa::create([
             'nama_desa' => 'Pabelan',
@@ -48,7 +48,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // 2. Aparatur Pemerintahan Desa
-        $kadesAparatur = Aparatur::firstOrCreate(['nama' => 'Sujatno, S.Sos.'], [
+        Aparatur::firstOrCreate(['nama' => 'Sujatno, S.Sos.'], [
             'jabatan' => 'Kepala Desa',
             'nip_niap' => '19750512 200212 1 003',
             'pendidikan_terakhir' => 'S1 Ilmu Administrasi Negara',
@@ -114,7 +114,7 @@ class DatabaseSeeder extends Seeder
             'no_hp' => '081234567890',
         ]);
 
-        // 4. Akun Pengguna (Users)
+        // 4. Akun Pengguna
         User::firstOrCreate(['email' => 'admin@sadesa.id'], [
             'name' => 'Administrator Desa',
             'password' => Hash::make('password'),
@@ -134,14 +134,29 @@ class DatabaseSeeder extends Seeder
             'role' => 'warga',
         ]);
 
-        // 5. Master Jenis Surat Layanan Warga (14 Jenis Surat - Anggota 2)
+        // 5. Master Jenis Surat
         $this->call(JenisSuratSeeder::class);
 
         // 6. Master Kategori Informasi
-        $katBerita = KategoriInformasi::firstOrCreate(['slug' => 'berita-desa'], ['nama_kategori' => 'Berita Desa']);
-        KategoriInformasi::firstOrCreate(['slug' => 'pengumuman'], ['nama_kategori' => 'Pengumuman Resmi']);
-        KategoriInformasi::firstOrCreate(['slug' => 'pembangunan'], ['nama_kategori' => 'Transparansi Pembangunan']);
-        KategoriInformasi::firstOrCreate(['slug' => 'kegiatan-warga'], ['nama_kategori' => 'Kegiatan Warga & Pemuda']);
+        KategoriInformasi::firstOrCreate(
+            ['slug' => 'berita-desa'],
+            ['nama_kategori' => 'Berita Desa']
+        );
+
+        KategoriInformasi::firstOrCreate(
+            ['slug' => 'pengumuman'],
+            ['nama_kategori' => 'Pengumuman Resmi']
+        );
+
+        KategoriInformasi::firstOrCreate(
+            ['slug' => 'pembangunan'],
+            ['nama_kategori' => 'Transparansi Pembangunan']
+        );
+
+        KategoriInformasi::firstOrCreate(
+            ['slug' => 'kegiatan-warga'],
+            ['nama_kategori' => 'Kegiatan Warga & Pemuda']
+        );
 
         // 7. Modul Panduan & Tutorial
         Panduan::firstOrCreate(['slug' => 'panduan-pengajuan-surat-online'], [
@@ -161,5 +176,8 @@ class DatabaseSeeder extends Seeder
             'urutan' => 2,
             'is_aktif' => true,
         ]);
+
+        // 8. Menjalankan InformasiSeeder
+        $this->call(InformasiSeeder::class);
     }
 }
